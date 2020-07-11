@@ -30,6 +30,16 @@ import com.serenegiant.widget.CameraViewInterface;
 
 public class UVCCameraHandler extends AbstractUVCCameraHandler {
 
+	private String name=UVCCameraHandler.class.getSimpleName();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * create UVCCameraHandler, use MediaVideoEncoder, try MJPEG, default bandwidth
 	 * @param parent
@@ -131,5 +141,12 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
 	@Override
 	public void captureStill(final String path) {
 		super.captureStill(path);
+	}
+
+	@Override
+	public String toString() {
+		return "UVCCameraHandler{" +
+				"name='" + name + '\'' +
+				'}';
 	}
 }

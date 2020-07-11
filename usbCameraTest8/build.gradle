@@ -48,6 +48,12 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 	}
+	repositories {
+		flatDir {
+			dirs 'libs'
+		}
+	}
+
 }
 
 dependencies {
@@ -61,9 +67,9 @@ dependencies {
 	})
 	testImplementation 'junit:junit:4.12'
 
-	implementation("com.serenegiant:common:${commonLibVersion}") {
-		exclude module: 'support-v4'
-	}
+//	implementation("com.serenegiant:common:${commonLibVersion}") {
+//		exclude module: 'support-v4'
+//	}
 	implementation project(':libuvccamera')
 	implementation project(':usbCameraCommon')
 }

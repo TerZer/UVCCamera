@@ -1398,6 +1398,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 
 	if (UNLIKELY(strmh->running)) {
 		UVC_EXIT(UVC_ERROR_BUSY);
+		UVC_DEBUG("UVC_ERROR_BUSY");
 		return UVC_ERROR_BUSY;
 	}
 
@@ -1595,6 +1596,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 	}
 
 	if (UNLIKELY(ret != UVC_SUCCESS)) {
+		UVC_DEBUG("UNLIKELY(ret != UVC_SUCCESS)");
 		/** @todo clean up transfers and memory */
 		goto fail;
 	}
@@ -1602,7 +1604,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 	UVC_EXIT(ret);
 	return ret;
 fail:
-	LOGE("fail");
+	LOGE("---->fail:ret%d",ret);
 	strmh->running = 0;
 	UVC_EXIT(ret);
 	return ret;

@@ -43,4 +43,5 @@ public interface CameraViewInterface extends IAspectRatioView {
 	public boolean hasSurface();
 	public void setVideoEncoder(final IVideoEncoder encoder);
 	public Bitmap captureStillImage();
+
 }

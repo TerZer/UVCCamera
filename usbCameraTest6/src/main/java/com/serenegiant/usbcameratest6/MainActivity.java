@@ -68,8 +68,8 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
 	/**
 	 * for camera preview display
 	 */
-	private CameraViewInterface mUVCCameraViewL;
-	private CameraViewInterface mUVCCameraViewR;
+	private UVCCameraTextureView mUVCCameraViewL;
+	private UVCCameraTextureView mUVCCameraViewR;
 	/**
 	 * for open&start / stop&close camera preview
 	 */
@@ -90,12 +90,12 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
 		mCaptureButton.setOnClickListener(mOnClickListener);
 		mCaptureButton.setVisibility(View.INVISIBLE);
 
-		mUVCCameraViewL = (CameraViewInterface)findViewById(R.id.camera_view_L);
+		mUVCCameraViewL = (UVCCameraTextureView)findViewById(R.id.camera_view_L);
 		mUVCCameraViewL.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float)UVCCamera.DEFAULT_PREVIEW_HEIGHT);
 		mUVCCameraViewL.setCallback(mCallback);
 		((View)mUVCCameraViewL).setOnLongClickListener(mOnLongClickListener);
 
-		mUVCCameraViewR = (CameraViewInterface)findViewById(R.id.camera_view_R);
+		mUVCCameraViewR = (UVCCameraTextureView)findViewById(R.id.camera_view_R);
 		mUVCCameraViewR.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float)UVCCamera.DEFAULT_PREVIEW_HEIGHT);
 		mUVCCameraViewR.setCallback(mCallback);
 		((View)mUVCCameraViewL).setOnLongClickListener(mOnLongClickListener);

@@ -49,6 +49,7 @@ import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.utils.ViewAnimationHelper;
 import com.serenegiant.widget.CameraViewInterface;
+import com.serenegiant.widget.UVCCameraTextureView;
 
 public final class MainActivity extends BaseActivity implements CameraDialog.CameraDialogParent {
 	private static final boolean DEBUG = true;	// TODO set false on release
@@ -95,7 +96,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
 	/**
 	 * for camera preview display
 	 */
-	private CameraViewInterface mUVCCameraView;
+	private UVCCameraTextureView mUVCCameraView;
 	/**
 	 * for open&start / stop&close camera preview
 	 */
@@ -122,8 +123,8 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
 		mCaptureButton.setVisibility(View.INVISIBLE);
 		final View view = findViewById(R.id.camera_view);
 		view.setOnLongClickListener(mOnLongClickListener);
-		mUVCCameraView = (CameraViewInterface)view;
-		mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (float)PREVIEW_HEIGHT);
+		mUVCCameraView = (UVCCameraTextureView)view;
+		mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (double)PREVIEW_HEIGHT);
 
 		mBrightnessButton = findViewById(R.id.brightness_button);
 		mBrightnessButton.setOnClickListener(mOnClickListener);
