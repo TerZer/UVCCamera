@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10.2)
 project(libuvc)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -26,6 +26,7 @@ find_path(LIBUSB_INCLUDE_DIR libusb-1.0/libusb.h
 find_package(jpeg QUIET)
 if(NOT JPEG_FOUND)
   find_path(JPEG_INCLUDE_DIR jpeglib.h)
+
   if(JPEG_INCLUDE_DIR)
     set(JPEG_FOUND ON)
     set(JPEG_LIBRARIES -ljpeg)

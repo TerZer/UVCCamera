@@ -41,6 +41,14 @@ android {
     }
 
     buildTypes {
+		debug{
+			jniDebuggable true
+			jniDebuggable = true
+
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+		}
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
@@ -48,9 +56,6 @@ android {
     }
     compileOptions {
     }
-
-
-
 }
 
 dependencies {

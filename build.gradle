@@ -4,9 +4,10 @@ buildscript {
 //		google()
 		maven { url 'https://maven.google.com' }
         jcenter()
-    }
+		google()
+	}
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
     }
 }
 
@@ -30,7 +31,7 @@ task clean(type: Delete) {
 ext {
 	supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
 	commonLibVersion= '2.12.4'
-	versionBuildTool = '27.0.3'
+	versionBuildTool = '29.0.2'
 	versionCompiler = 27
 	versionTarget = 27
 	versionNameString = '1.0.0'

@@ -1241,12 +1241,14 @@ static int add_to_flying_list(struct usbi_transfer *transfer) {
 
 	/* if we have no other flying transfers, start the list with this one */
 	if (list_empty(&ctx->flying_transfers)) {
+	LOGD("!timerisset(timeout")
 		list_add(&transfer->list, &ctx->flying_transfers);
 		goto out;
 	}
 
 	/* if we have infinite timeout, append to end of list */
 	if (!timerisset(timeout)) {
+		LOGD("!timerisset(timeout")
 		list_add_tail(&transfer->list, &ctx->flying_transfers);
 		/* first is irrelevant in this case */
 		goto out;
@@ -1457,8 +1459,10 @@ int API_EXPORTED libusb_submit_transfer(struct libusb_transfer *transfer) {
 			r = usbi_backend->submit_transfer(itransfer);
 		}
 		if (UNLIKELY(r != LIBUSB_SUCCESS)) {
+		    LOGE("add_to_flying_list fail");
 			list_del(&itransfer->list);
 			arm_timerfd_for_next_timeout(ctx);
+
 		} else {
 			/* keep a reference to this device */
 			libusb_ref_device(transfer->dev_handle->dev);
