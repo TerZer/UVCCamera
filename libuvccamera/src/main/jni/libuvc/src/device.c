@@ -384,6 +384,7 @@ uvc_error_t uvc_get_device_info(uvc_device_t *dev, uvc_device_info_t **info) {
 		// but some buggy device will return error when get active config.
 		// so we will use libusb_get_config_descriptor...
 		free(internal_info);
+		LOGE("uvc_get_device_info  ->UVC_EXIT(UVC_ERROR_IO)")
 		UVC_EXIT(UVC_ERROR_IO);
 		return UVC_ERROR_IO;
 	}
