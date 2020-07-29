@@ -23,6 +23,7 @@
 
 package com.serenegiant.usbcameratest7;
 
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.hardware.input.InputManager;
 import android.hardware.usb.UsbDevice;
@@ -36,13 +37,17 @@ import android.widget.Toast;
 
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
+import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usb.UVCCamera;
+import com.serenegiant.usbcameracommon.CameraCallback;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.widget.CameraViewInterface;
 import com.serenegiant.widget.UVCCameraTextureView;
+
+import java.util.List;
 
 /**
  * Show side by side view from two camera.
@@ -90,6 +95,14 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         Log.d(TAG, "onCreate() called with: getDeviceCount = [" + mUSBMonitor.getDeviceCount() + "]");
         Log.d(TAG, "onCreate() called with: getDeviceList = [" + mUSBMonitor.getDeviceList() + "]");
 
+        findViewById(R.id.textView1).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MultiCameraActivity.class));
+                finish();
+            }
+        });
+
     }
 
     private void initCamera() {
@@ -100,6 +113,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mCaptureButtonL.setVisibility(View.INVISIBLE);
         mHandlerL = UVCCameraHandler.createHandler(this, mUVCCameraViewL, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, BANDWIDTH_FACTORS[0]);
         mHandlerL.setName("L");
+        mUVCCameraViewL.setName("L");
 
         mUVCCameraViewR = findViewById(R.id.camera_view_R);
         mUVCCameraViewR.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
@@ -107,6 +121,10 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mCaptureButtonR.setVisibility(View.INVISIBLE);
         mHandlerR = UVCCameraHandler.createHandler(this, mUVCCameraViewR, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, BANDWIDTH_FACTORS[1]);
         mHandlerR.setName("R");
+        mUVCCameraViewR.setName("R");
+
+        addCallback(mHandlerL);
+        addCallback(mHandlerR);
 
         mUVCCameraViewLB = findViewById(R.id.camera_view_LB);
         mUVCCameraViewLB.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
@@ -114,13 +132,66 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mCaptureButtonLB.setVisibility(View.INVISIBLE);
         mHandlerLB = UVCCameraHandler.createHandler(this, mUVCCameraViewLB, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, BANDWIDTH_FACTORS[2]);
         mHandlerLB.setName("LB");
+        mUVCCameraViewLB.setName("LB");
 
         mUVCCameraViewRB = findViewById(R.id.camera_view_RB);
         mUVCCameraViewRB.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
         mCaptureButtonRB = findViewById(R.id.capture_button_RB);
         mCaptureButtonRB.setVisibility(View.INVISIBLE);
-        mHandlerRB = UVCCameraHandler.createHandler(this, mUVCCameraViewRB, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, BANDWIDTH_FACTORS[3]);
+        mHandlerRB = UVCCameraHandler.createHandler(this, mUVCCameraViewRB, 1920, 1080, BANDWIDTH_FACTORS[3]);
         mHandlerRB.setName("RB");
+        mUVCCameraViewRB.setName("RB");
+    }
+
+    private void addCallback(UVCCameraHandler handler) {
+        handler.addCallback(new CameraCallback() {
+            @Override
+            public void onOpen() {
+                UVCCamera uvcCamera = handler.getUVCCamera();
+                if (uvcCamera != null) {
+                    List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
+                    Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
+                   // uvcCamera.setPreviewSize(1920, 1080);
+/*
+                    if (maxSize.width < 1920) {
+                        uvcCamera.setPreviewSize(1920, 1280);
+                    }else {
+                        uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
+                    }
+*/
+                }
+            }
+
+            @Override
+            public void onClose() {
+                Log.d(TAG, "onClose() called");
+            }
+
+            @Override
+            public void onStartPreview() {
+                Log.d(TAG, "onStartPreview() called");
+            }
+
+            @Override
+            public void onStopPreview() {
+                Log.d(TAG, "onStopPreview() called");
+            }
+
+            @Override
+            public void onStartRecording() {
+                Log.d(TAG, "onStartRecording() called");
+            }
+
+            @Override
+            public void onStopRecording() {
+                Log.d(TAG, "onStopRecording() called");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "onError() called with: e = [" + e + "]");
+            }
+        });
     }
 
 
@@ -130,6 +201,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mUSBMonitor.register();
         if (mUVCCameraViewR != null)
             mUVCCameraViewR.onResume();
+
         if (mUVCCameraViewL != null)
             mUVCCameraViewL.onResume();
 
@@ -187,7 +259,6 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mCaptureButtonRB = null;
         mUVCCameraViewLB = null;
         mCaptureButtonLB = null;
-
         super.onDestroy();
     }
 

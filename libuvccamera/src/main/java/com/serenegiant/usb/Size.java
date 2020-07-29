@@ -284,7 +284,7 @@ public class Size implements Parcelable {
 		float frame_rate = 0.0f;
 		try {
 			frame_rate = getCurrentFrameRate();
-		} catch (final Exception e) {
+		} catch (final Exception ignored) {
 		}
 		return String.format(Locale.US, "Size(%dx%d@%4.1f,type:%d,frame:%d,index:%d,%s)", width, height, frame_rate, type, frame_type, index, frameRates);
 	}
