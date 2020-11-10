@@ -31,8 +31,8 @@ public class XCameraView extends LinearLayout {
     private View contentView;
     private UVCCameraHandler mHandler;
     private CameraViewInterface mUVCCameraView;
-    private ImageButton mCaptureButton;
-    private BaseActivity baseActivity;
+    private final ImageButton mCaptureButton;
+    private final BaseActivity baseActivity;
 
     public XCameraView(Context context) {
         super(context);

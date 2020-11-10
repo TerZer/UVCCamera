@@ -296,6 +296,7 @@ public class UVCCamera {
      * @param height
      */
     public void setPreviewSize(final int width, final int height) {
+        Log.d(TAG, "---------------->setPreviewSize() called with: width = [" + width + "], height = [" + height + "]");
         setPreviewSize(width, height, DEFAULT_PREVIEW_MIN_FPS, DEFAULT_PREVIEW_MAX_FPS, mCurrentFrameFormat, mCurrentBandwidthFactor);
     }
 
