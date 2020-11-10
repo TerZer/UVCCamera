@@ -72,11 +72,7 @@ public class XCameraView extends LinearLayout {
                     if (uvcCamera != null) {
                         List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
                         Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
-                        if (maxSize.width == 1600) {
-                            uvcCamera.setPreviewSize(640, 480);
-                        } else {
-                            uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
-                        }
+                        uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
                     }
                 }
 

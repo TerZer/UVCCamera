@@ -138,7 +138,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
         mUVCCameraViewRB.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
         mCaptureButtonRB = findViewById(R.id.capture_button_RB);
         mCaptureButtonRB.setVisibility(View.INVISIBLE);
-        mHandlerRB = UVCCameraHandler.createHandler(this, mUVCCameraViewRB, 1920, 1080, BANDWIDTH_FACTORS[3]);
+        mHandlerRB = UVCCameraHandler.createHandler(this, mUVCCameraViewRB, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, BANDWIDTH_FACTORS[3]);
         mHandlerRB.setName("RB");
         mUVCCameraViewRB.setName("RB");
     }
@@ -151,14 +151,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
                 if (uvcCamera != null) {
                     List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
                     Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
-                   // uvcCamera.setPreviewSize(1920, 1080);
-/*
-                    if (maxSize.width < 1920) {
-                        uvcCamera.setPreviewSize(1920, 1280);
-                    }else {
-                        uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
-                    }
-*/
+                    uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
                 }
             }
 
