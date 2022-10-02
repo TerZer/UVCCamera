@@ -2,39 +2,39 @@
 buildscript {
     repositories {
 //		google()
-		maven { url 'https://maven.google.com' }
+        //maven { url 'https://maven.google.com' }
         jcenter()
-		google()
-	}
+        google()
+    }
     dependencies {
-		classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.0.2'
     }
 }
 
 allprojects {
     repositories {
-//    	google()
-		maven { url 'https://maven.google.com' }
-		jcenter()
-		maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
-		flatDir {
-			dirs project(':libuvccamera').file('src/main/libs')
-		}
+        google()
+        //maven { url 'https://maven.google.com' }
+        jcenter()
+        //maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
+        flatDir {
+            dirs project(':libuvccamera').file('src/main/libs')
+        }
     }
 
 }
 
 task clean(type: Delete) {
-	delete rootProject.buildDir
+    delete rootProject.buildDir
 }
 
 ext {
-	supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
-	commonLibVersion= '2.12.4'
-	versionBuildTool = '29.0.2'
-	versionCompiler = 27
-	versionTarget = 27
-	versionNameString = '1.0.0'
-	javaSourceCompatibility = JavaVersion.VERSION_1_8
-	javaTargetCompatibility = JavaVersion.VERSION_1_8
+    supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
+    commonLibVersion = '2.12.4'
+    versionBuildTool = '29.0.2'
+    versionCompiler = 27
+    versionTarget = 27
+    versionNameString = '1.0.0'
+    javaSourceCompatibility = JavaVersion.VERSION_1_8
+    javaTargetCompatibility = JavaVersion.VERSION_1_8
 }

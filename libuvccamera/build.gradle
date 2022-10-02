@@ -25,27 +25,28 @@ apply plugin: 'com.android.library'
 import org.apache.tools.ant.taskdefs.condition.Os
 
 android {
-	compileSdkVersion versionCompiler
-	buildToolsVersion versionBuildTool
 
-	compileOptions {
-		sourceCompatibility javaSourceCompatibility
-		targetCompatibility javaTargetCompatibility
-	}
+    compileSdkVersion versionCompiler
+    buildToolsVersion versionBuildTool
+
+    ndkVersion '25.0.8775105'
+    compileOptions {
+        sourceCompatibility javaSourceCompatibility
+        targetCompatibility javaTargetCompatibility
+    }
 
     defaultConfig {
         minSdkVersion 14
-		targetSdkVersion versionTarget
+        targetSdkVersion versionTarget
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
 
-		ndk {
-			abiFilters  'armeabi-v7a','arm64-v8a',"x86", "x86_64"
-		}
-
-		externalNativeBuild {
-			cmake {
-				cppFlags ""
-			}
-		}
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
     }
 
     buildTypes {
@@ -54,24 +55,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-	sourceSets {
-		main {
-			jniLibs.srcDir 'src/main/libs'
-			jni.srcDirs = []
-		}
-	}
+    sourceSets {
+        main {
+            jniLibs.srcDir 'src/main/libs'
+            jni.srcDirs = []
+        }
+    }
 
-	repositories {
-		flatDir {
-			dirs 'jni/libuvc/libs'
-		}
-	}
+    repositories {
+        flatDir {
+            dirs 'jni/libuvc/libs'
+        }
+    }
 
-	externalNativeBuild {
-		ndkBuild {
-			path "src/main/jni/Android.mk"
-		}
-	}
+    externalNativeBuild {
+        ndkBuild {
+            path "src/main/jni/Android.mk"
+        }
+    }
 
 }
 
@@ -80,28 +81,28 @@ android {
 //}
 
 String getNdkBuildPath() {
-	Properties properties = new Properties()
-	properties.load(project.rootProject.file('local.properties').newDataInputStream())
-	def ndkBuildingDir = properties.getProperty("ndk.dir")
-	def ndkBuildPath = ndkBuildingDir
-	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		ndkBuildPath = ndkBuildingDir + '/ndk-build.cmd'
-	} else {
-		ndkBuildPath = ndkBuildingDir + '/ndk-build'
-	}
-	return ndkBuildPath
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    def ndkBuildingDir = properties.getProperty("ndk.dir")
+    def ndkBuildPath = ndkBuildingDir
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        ndkBuildPath = ndkBuildingDir + '/ndk-build.cmd'
+    } else {
+        ndkBuildPath = ndkBuildingDir + '/ndk-build'
+    }
+    return ndkBuildPath
 }
 
 task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
-	println('executing ndkBuild')
-	def ndkBuildPath = getNdkBuildPath();
-	commandLine ndkBuildPath, '-j8', '-C', file('src/main').absolutePath
+    println('executing ndkBuild')
+    def ndkBuildPath = getNdkBuildPath();
+    commandLine ndkBuildPath, '-j8', '-C', file('src/main').absolutePath
 }
 
 task ndkClean(type: Exec, description: 'clean JNI libraries') {
-	println('executing ndkBuild clean')
-	def ndkBuildPath = getNdkBuildPath();
-	commandLine ndkBuildPath, 'clean', '-C', file('src/main').absolutePath
+    println('executing ndkBuild clean')
+    def ndkBuildPath = getNdkBuildPath();
+    commandLine ndkBuildPath, 'clean', '-C', file('src/main').absolutePath
 }
 
 //clean.dependsOn 'ndkClean'
@@ -109,10 +110,10 @@ task ndkClean(type: Exec, description: 'clean JNI libraries') {
 
 dependencies {
     implementation fileTree(dir: new File(buildDir, 'libs'), include: '*.jar')
-	api(name:'common-2.12.4', ext:'aar')
-	api "com.android.support:appcompat-v7:${supportLibVersion}"
-	implementation "com.android.support:support-annotations:${supportLibVersion}"
-	//implementation(name:'common-2.12.4', ext:'aar')
+    api(name: 'common-2.12.4', ext: 'aar')
+    api "com.android.support:appcompat-v7:${supportLibVersion}"
+    implementation "com.android.support:support-annotations:${supportLibVersion}"
+    //implementation(name:'common-2.12.4', ext:'aar')
 //	implementation("com.serenegiant:common:${commonLibVersion}") {
 //		exclude module: 'support-v4'
 //	}
