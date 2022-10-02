@@ -39,23 +39,40 @@ android {
 		versionCode 9
 		versionName "3.00"
     }
-
+	signingConfigs {
+		debug {
+			storeFile file('../appKey')
+			storePassword '12345678'
+			keyAlias 'DDG'
+			keyPassword '12345678'
+		}
+		release {
+			storeFile file('../appKey')
+			storePassword '12345678'
+			keyAlias 'DDG'
+			keyPassword '12345678'
+		}
+	}
     buildTypes {
 		debug{
 			jniDebuggable true
 			jniDebuggable = true
 
+			signingConfig signingConfigs.debug
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
 		}
 
         release {
-            minifyEnabled true
+			signingConfig signingConfigs.release
+			minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
     }
     compileOptions {
     }
+
+
 }
 
 dependencies {

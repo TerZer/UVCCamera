@@ -40,13 +40,36 @@ android {
 		versionName "3.00"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-        }
-    }
+	signingConfigs {
+		debug {
+			storeFile file('../appKey')
+			storePassword '12345678'
+			keyAlias 'DDG'
+			keyPassword '12345678'
+		}
+		release {
+			storeFile file('../appKey')
+			storePassword '12345678'
+			keyAlias 'DDG'
+			keyPassword '12345678'
+		}
+	}
+	buildTypes {
+		debug{
+			jniDebuggable true
+			jniDebuggable = true
 
+			signingConfig signingConfigs.debug
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+		}
+
+		release {
+			signingConfig signingConfigs.release
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+		}
+	}
 
 }
 
