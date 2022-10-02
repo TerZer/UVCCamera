@@ -22,12 +22,8 @@ apply plugin: 'com.android.library'
  *  may have a different license, see the respective files.
  */
 
-import org.apache.tools.ant.taskdefs.condition.Os
-
 android {
-
     compileSdkVersion versionCompiler
-
     ndkVersion '25.0.8775105'
     compileOptions {
         sourceCompatibility javaSourceCompatibility
@@ -83,13 +79,7 @@ String getNdkBuildPath() {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     def ndkBuildingDir = properties.getProperty("ndk.dir")
-    def ndkBuildPath = ndkBuildingDir
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        ndkBuildPath = ndkBuildingDir + '/ndk-build.cmd'
-    } else {
-        ndkBuildPath = ndkBuildingDir + '/ndk-build'
-    }
-    return ndkBuildPath
+    return ndkBuildingDir
 }
 
 task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
