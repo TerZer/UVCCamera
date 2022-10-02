@@ -1,6 +1,20 @@
 UVCCamera
 =========
 
+
+### Step 1. Add it in your root build.gradle at the end of repositories:
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+### Step 2. Add the dependency
+	dependencies {
+	        implementation 'com.github.pcyfox:UVCCamera:Tag'
+	}
+
+
 library and sample to access to UVC web camera on non-rooted Android device
 
 Copyright (c) 2014-2017 saki t_saki@serenegiant.com
@@ -166,16 +180,3 @@ Add new sample app `usbCameraTest8` to show how to set/get uvc control like brig
 Add new sample app on [OpenCVwithUVC](https://github.com/saki4510t/OpenCVwithUVC.git) repository.
 This shows the way to pass video images from UVC into `cv::Mat` (after optional applying video effect by OpenGL|ES) and execute image processing by `OpenCV`.
 
-
-### Add it in your root build.gradle at the end of repositories:
-
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-### Step 2. Add the dependency
-	dependencies {
-	        implementation 'com.github.pcyfox:UVCCamera:Tag'
-	}

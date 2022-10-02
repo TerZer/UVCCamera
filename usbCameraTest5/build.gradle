@@ -25,7 +25,6 @@ apply plugin: 'com.android.application'
 
 android {
 	compileSdkVersion versionCompiler
-	buildToolsVersion versionBuildTool
 
 	compileOptions {
 		sourceCompatibility javaSourceCompatibility
@@ -70,6 +69,7 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
 		}
 	}
+	namespace 'com.serenegiant.usbcameratest5'
 
 }
 

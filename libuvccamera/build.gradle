@@ -27,7 +27,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 android {
 
     compileSdkVersion versionCompiler
-    buildToolsVersion versionBuildTool
 
     ndkVersion '25.0.8775105'
     compileOptions {
@@ -58,7 +57,6 @@ android {
     sourceSets {
         main {
             jniLibs.srcDir 'src/main/libs'
-            jni.srcDirs = []
         }
     }
 
@@ -73,6 +71,7 @@ android {
             path "src/main/jni/Android.mk"
         }
     }
+    namespace 'com.serenegiant.uvccamera'
 
 }
 
