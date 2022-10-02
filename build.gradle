@@ -4,6 +4,7 @@ buildscript {
 //		google()
         //maven { url 'https://maven.google.com' }
         jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
@@ -16,6 +17,7 @@ allprojects {
         google()
         //maven { url 'https://maven.google.com' }
         jcenter()
+        mavenCentral()
         //maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
         flatDir {
             dirs project(':libuvccamera').file('src/main/libs')
