@@ -35,7 +35,7 @@ import android.content.DialogInterface;
 import android.hardware.usb.UsbDevice;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,11 +45,9 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
 
-import com.serenegiant.usb.DeviceFilter;
-import com.serenegiant.usb.USBMonitor;
-
 import com.serenegiant.uvccamera.R;
 
+@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class CameraDialog extends DialogFragment {
     private static final String TAG = CameraDialog.class.getSimpleName();
     public interface CameraDialogParent {

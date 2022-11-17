@@ -5,9 +5,9 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
@@ -28,7 +28,6 @@ import java.util.List;
 
 public class XCameraView extends LinearLayout {
     private static final String TAG = "XCameraView";
-    private View contentView;
     private UVCCameraHandler mHandler;
     private CameraViewInterface mUVCCameraView;
     private final ImageButton mCaptureButton;
@@ -122,24 +121,16 @@ public class XCameraView extends LinearLayout {
         handler.open(ctrlBlock);
         final SurfaceTexture st = cameraViewInterface.getSurfaceTexture();
         handler.startPreview(new Surface(st));
-        post(new Runnable() {
-            @Override
-            public void run() {
-                button.setVisibility(View.VISIBLE);
-            }
-        });
+        post(() -> button.setVisibility(View.VISIBLE));
     }
 
 
     public void disConnect(UsbDevice device) {
         Log.d(TAG, "disConnect() called with: device = [" + device + "]");
         if ((mHandler != null) && !mHandler.isEqual(device)) {
-            baseActivity.queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    mHandler.close();
-                    setCameraButton();
-                }
+            baseActivity.queueEvent(() -> {
+                mHandler.close();
+                setCameraButton();
             }, 0);
         }
     }

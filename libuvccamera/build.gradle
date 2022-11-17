@@ -31,7 +31,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 18
+        minSdkVersion minSdkV
         targetSdkVersion versionTarget
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
@@ -99,6 +99,6 @@ task ndkClean(type: Exec, description: 'clean JNI libraries') {
 dependencies {
     implementation fileTree(dir: new File(buildDir, 'libs'), include: '*.jar')
     api(name: 'common-2.12.4', ext: 'aar')
-    api "com.android.support:appcompat-v7:${supportLibVersion}"
-    implementation "com.android.support:support-annotations:${supportLibVersion}"
+    api 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
 }
