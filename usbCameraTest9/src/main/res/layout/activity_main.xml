@@ -27,9 +27,26 @@
     android:layout_height="match_parent"
     android:background="#ff000000"
     tools:context=".MainActivity"
-
     tools:ignore="MergeRootFrame">
 
+
+    <FrameLayout
+        android:layout_width="640dp"
+        android:layout_height="480dp"
+        android:layout_centerInParent="true">
+
+        <com.serenegiant.widget.XCameraView
+            android:id="@+id/xcamera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.df.lib_seete6.view.FaceRectView
+            android:id="@+id/face_rect_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </FrameLayout>
 
 
 </RelativeLayout>

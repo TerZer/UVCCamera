@@ -56,8 +56,13 @@ public class XCameraView extends LinearLayout {
         mCaptureButton = findViewById(R.id.btn_capture_button);
         mCaptureButton.setVisibility(View.INVISIBLE);
         mUVCCameraView = findViewById(R.id.camera_view);
+
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
         createHandler();
+    }
+
+    public void setFrameCallback(CameraFrameCallback frameCallback) {
+        this.frameCallback = frameCallback;
     }
 
     private void createHandler() {

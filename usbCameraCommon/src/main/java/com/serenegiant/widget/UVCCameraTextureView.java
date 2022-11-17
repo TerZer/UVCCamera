@@ -40,6 +40,7 @@ import com.serenegiant.encoder.MediaVideoEncoder;
 import com.serenegiant.glutils.EGLBase;
 import com.serenegiant.glutils.GLDrawer2D;
 import com.serenegiant.glutils.es1.GLHelper;
+import com.serenegiant.usbcameracommon.BuildConfig;
 import com.serenegiant.utils.FpsCounter;
 
 /**
@@ -50,8 +51,7 @@ import com.serenegiant.utils.FpsCounter;
  */
 public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
         implements TextureView.SurfaceTextureListener, CameraViewInterface {
-
-    private static final boolean DEBUG = true;    // TODO set false on release
+    private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "UVCCameraTextureView";
     private String name = "";
 
