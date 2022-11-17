@@ -76,3 +76,5 @@ profiles_settings.xml
 /libuvccamera/src/main/libs/armeabi-v7a/
 /usbCameraCommon/gradlew
 /usbCameraCommon/gradlew.bat
+/.gradle/
+/.idea/
