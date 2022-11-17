@@ -47,6 +47,7 @@ import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.widget.CameraViewInterface;
 import com.serenegiant.widget.UVCCameraTextureView;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
@@ -183,6 +184,11 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
             @Override
             public void onError(Exception e) {
                 Log.e(TAG, "onError() called with: e = [" + e + "]");
+            }
+
+            @Override
+            public void onFrame(ByteBuffer frame, int w, int h) {
+
             }
         });
     }

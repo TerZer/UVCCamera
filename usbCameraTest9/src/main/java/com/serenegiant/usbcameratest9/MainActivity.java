@@ -21,15 +21,9 @@
  *  may have a different license, see the respective files.
  */
 
-include ':libuvccamera'
-include ':usbCameraCommon'
-include ':usbCameraTest'
-include ':usbCameraTest0'
-include ':usbCameraTest2'
-include ':usbCameraTest3'
-include ':usbCameraTest4'
-include ':usbCameraTest5'
-include ':usbCameraTest6'
-include ':usbCameraTest7'
-include ':usbCameraTest8'
-include ':usbCameraTest9'
+package com.serenegiant.usbcameratest9;
+
+import com.serenegiant.common.BaseActivity;
+
+public final class MainActivity extends BaseActivity {
+}

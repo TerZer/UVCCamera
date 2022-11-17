@@ -276,6 +276,19 @@ public class UVCCamera {
         return !TextUtils.isEmpty(mSupportedSize) ? mSupportedSize : (mSupportedSize = nativeGetSupportedSize(mNativePtr));
     }
 
+
+    public int getCurrentWidth() {
+        return mCurrentWidth;
+    }
+
+    public int getCurrentHeight() {
+        return mCurrentHeight;
+    }
+
+    public void setmCurrentHeight(int mCurrentHeight) {
+        this.mCurrentHeight = mCurrentHeight;
+    }
+
     public Size getPreviewSize() {
         Size result = null;
         final List<Size> list = getSupportedSizeList();

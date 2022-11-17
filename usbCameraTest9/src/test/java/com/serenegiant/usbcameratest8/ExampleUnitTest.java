@@ -21,15 +21,20 @@
  *  may have a different license, see the respective files.
  */
 
-include ':libuvccamera'
-include ':usbCameraCommon'
-include ':usbCameraTest'
-include ':usbCameraTest0'
-include ':usbCameraTest2'
-include ':usbCameraTest3'
-include ':usbCameraTest4'
-include ':usbCameraTest5'
-include ':usbCameraTest6'
-include ':usbCameraTest7'
-include ':usbCameraTest8'
-include ':usbCameraTest9'
+package com.serenegiant.usbcameratest8;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
+public class ExampleUnitTest {
+	@Test
+	public void addition_isCorrect() throws Exception {
+		assertEquals(4, 2 + 2);
+	}
+}

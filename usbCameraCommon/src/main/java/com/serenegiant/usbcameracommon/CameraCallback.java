@@ -1,11 +1,22 @@
 package com.serenegiant.usbcameracommon;
 
+import java.nio.ByteBuffer;
+
 public interface CameraCallback {
-    public void onOpen();
-    public void onClose();
-    public void onStartPreview();
-    public void onStopPreview();
-    public void onStartRecording();
-    public void onStopRecording();
-    public void onError(final Exception e);
+    void onOpen();
+
+    void onClose();
+
+    void onStartPreview();
+
+    void onStopPreview();
+
+    void onStartRecording();
+
+    void onStopRecording();
+
+    void onError(final Exception e);
+
+    void onFrame(ByteBuffer frame, int w, int h);
+
 }

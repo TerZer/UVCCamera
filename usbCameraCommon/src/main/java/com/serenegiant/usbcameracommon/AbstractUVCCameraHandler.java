@@ -60,14 +60,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 abstract class AbstractUVCCameraHandler extends Handler {
     private static final boolean DEBUG = true;    // TODO set false on release
     private static final String TAG = "AbsUVCCameraHandler";
-
 
     private static final int MSG_OPEN = 0;
     private static final int MSG_CLOSE = 1;
@@ -83,7 +81,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     private volatile boolean mReleased;
 
     protected AbstractUVCCameraHandler(final CameraThread thread) {
-        mWeakThread = new WeakReference<CameraThread>(thread);
+        mWeakThread = new WeakReference<>(thread);
     }
 
     public int getWidth() {
@@ -334,9 +332,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
         private final WeakReference<Activity> mWeakParent;
         private final WeakReference<CameraViewInterface> mWeakCameraView;
         private final int mEncoderType;
-        private final Set<CameraCallback> mCallbacks = new CopyOnWriteArraySet<CameraCallback>();
-        private int mWidth, mHeight, mPreviewMode;
-        private float mBandwidthFactor;
+        private final Set<CameraCallback> mCallbacks = new CopyOnWriteArraySet<>();
+        private final int mWidth;
+        private final int mHeight;
+
+        private final int mPreviewMode;
+        private final float mBandwidthFactor;
         private boolean mIsPreviewing;
         private boolean mIsRecording;
         /**
@@ -377,8 +378,8 @@ abstract class AbstractUVCCameraHandler extends Handler {
             mHeight = height;
             mPreviewMode = format;
             mBandwidthFactor = bandwidthFactor;
-            mWeakParent = new WeakReference<Activity>(parent);
-            mWeakCameraView = new WeakReference<CameraViewInterface>(cameraView);
+            mWeakParent = new WeakReference<>(parent);
+            mWeakCameraView = new WeakReference<>(cameraView);
             loadShutterSound(parent);
         }
 
@@ -394,7 +395,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 if (mHandler == null)
                     try {
                         mSync.wait();
-                    } catch (final InterruptedException e) {
+                    } catch (final InterruptedException ignored) {
                     }
             }
             return mHandler;
@@ -478,11 +479,11 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 return;
             }
             try {
-                mUVCCamera.setPreviewSize(mWidth, mHeight, 1, 31, mPreviewMode, mBandwidthFactor);
+                mUVCCamera.setPreviewSize(mWidth, mHeight, 1, 30, mPreviewMode, mBandwidthFactor);
             } catch (final IllegalArgumentException e) {
                 try {
                     // fallback to YUV mode
-                    mUVCCamera.setPreviewSize(mWidth, mHeight, 1, 31, UVCCamera.DEFAULT_PREVIEW_MODE, mBandwidthFactor);
+                    mUVCCamera.setPreviewSize(mWidth, mHeight, 1, 30, UVCCamera.DEFAULT_PREVIEW_MODE, mBandwidthFactor);
                 } catch (final IllegalArgumentException e1) {
                     callOnError(e1);
                     return;
@@ -532,8 +533,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 final File outputFile = TextUtils.isEmpty(path)
                         ? MediaMuxerWrapper.getCaptureFile(Environment.DIRECTORY_DCIM, ".png")
                         : new File(path);
-                final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(outputFile));
-                try {
+                try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     try {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
                         os.flush();
@@ -541,8 +541,6 @@ abstract class AbstractUVCCameraHandler extends Handler {
                     } catch (final IOException e) {
                         e.printStackTrace();
                     }
-                } finally {
-                    os.close();
                 }
             } catch (final Exception e) {
                 callOnError(e);
@@ -567,10 +565,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
                         new MediaSurfaceEncoder(muxer, getWidth(), getHeight(), mMediaEncoderListener);
                         break;
                 }
-                if (true) {
-                    // for audio capturing
-                    new MediaAudioEncoder(muxer, mMediaEncoderListener);
-                }
+
+                // for audio capturing
+                new MediaAudioEncoder(muxer, mMediaEncoderListener);
+
                 muxer.prepare();
                 muxer.startRecording();
                 if (videoEncoder != null) {
@@ -614,6 +612,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
         private final IFrameCallback mIFrameCallback = new IFrameCallback() {
             @Override
             public void onFrame(final ByteBuffer frame) {
+                for (CameraCallback callback : mCallbacks) {
+                    callback.onFrame(frame, mUVCCamera.getCurrentWidth(), mUVCCamera.getCurrentHeight());
+                }
+
                 final MediaVideoBufferEncoder videoEncoder;
                 synchronized (mSync) {
                     videoEncoder = mVideoEncoder;
@@ -723,7 +725,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
             if (mSoundPool != null) {
                 try {
                     mSoundPool.release();
-                } catch (final Exception e) {
+                } catch (final Exception ignored) {
                 }
                 mSoundPool = null;
             }

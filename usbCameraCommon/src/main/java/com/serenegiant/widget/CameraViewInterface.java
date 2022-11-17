@@ -30,30 +30,30 @@ import android.view.Surface;
 import com.serenegiant.encoder.IVideoEncoder;
 
 public interface CameraViewInterface extends IAspectRatioView {
-    public interface Callback {
-        public void onSurfaceCreated(CameraViewInterface view, Surface surface);
+    interface Callback {
+        void onSurfaceCreated(CameraViewInterface view, Surface surface);
 
-        public void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height);
+        void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height);
 
-        public void onSurfaceDestroy(CameraViewInterface view, Surface surface);
+        void onSurfaceDestroy(CameraViewInterface view, Surface surface);
     }
 
-    public void onPause();
+    void onPause();
 
-    public void onResume();
+    void onResume();
 
-    public void setCallback(Callback callback);
+    void setCallback(Callback callback);
 
-    public SurfaceTexture getSurfaceTexture();
+    SurfaceTexture getSurfaceTexture();
 
-    public Surface getSurface();
+    Surface getSurface();
 
-    public boolean hasSurface();
+    boolean hasSurface();
 
-    public void setVideoEncoder(final IVideoEncoder encoder);
+    void setVideoEncoder(final IVideoEncoder encoder);
 
-    public Bitmap captureStillImage();
+    Bitmap captureStillImage();
 
-    public void setName(String name);
+    void setName(String name);
 
 }

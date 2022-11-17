@@ -21,7 +21,7 @@
  *  may have a different license, see the respective files.
  */
 
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion versionCompiler
@@ -32,23 +32,39 @@ android {
     }
 
     defaultConfig {
+        applicationId "com.serenegiant.usbcameratest9"
         minSdkVersion minSdkV
         targetSdkVersion versionTarget
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     }
-
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.serenegiant.usbcameracommon'
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    namespace 'com.serenegiant.usbcameratest9'
 
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation(name: 'common-2.12.4', ext: 'aar')
+    api fileTree(dir: 'libs', include: ['*.jar'])
+	implementation 'com.github.pcyfox:Seeta6-Android:V1.0.1'
+    implementation 'androidx.annotation:annotation:1.5.0'
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:4.13.2'
+
     implementation project(':libuvccamera')
+    implementation project(':usbCameraCommon')
 }

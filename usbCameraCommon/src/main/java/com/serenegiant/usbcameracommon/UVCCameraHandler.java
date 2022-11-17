@@ -50,10 +50,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @param height
      * @return
      */
-    public static final UVCCameraHandler createHandler(
-            final Activity parent, final CameraViewInterface cameraView,
-            final int width, final int height) {
-
+    public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int width, final int height) {
         return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
     }
 
@@ -67,9 +64,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @param bandwidthFactor
      * @return
      */
-    public static final UVCCameraHandler createHandler(
-            final Activity parent, final CameraViewInterface cameraView,
-            final int width, final int height, final float bandwidthFactor) {
+    public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int width, final int height, final float bandwidthFactor) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "createHandler() called with: parent = [" + parent + "], cameraView = [" + cameraView + "], width = [" + width + "], height = [" + height + "], bandwidthFactor = [" + bandwidthFactor + "]");
         return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, bandwidthFactor);
@@ -85,9 +80,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @param height
      * @return
      */
-    public static final UVCCameraHandler createHandler(
-            final Activity parent, final CameraViewInterface cameraView,
-            final int encoderType, final int width, final int height) {
+    public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int encoderType, final int width, final int height) {
 
         return createHandler(parent, cameraView, encoderType, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
     }
@@ -103,9 +96,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @param format      either UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
      * @return
      */
-    public static final UVCCameraHandler createHandler(
-            final Activity parent, final CameraViewInterface cameraView,
-            final int encoderType, final int width, final int height, final int format) {
+    public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int encoderType, final int width, final int height, final int format) {
 
         return createHandler(parent, cameraView, encoderType, width, height, format, UVCCamera.DEFAULT_BANDWIDTH);
     }
@@ -122,9 +113,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @param bandwidthFactor
      * @return
      */
-    public static final UVCCameraHandler createHandler(
-            final Activity parent, final CameraViewInterface cameraView,
-            final int encoderType, final int width, final int height, final int format, final float bandwidthFactor) {
+    public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int encoderType, final int width, final int height, final int format, final float bandwidthFactor) {
 
         final CameraThread thread = new CameraThread(UVCCameraHandler.class, parent, cameraView, encoderType, width, height, format, bandwidthFactor);
         thread.start();
@@ -152,8 +141,6 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
 
     @Override
     public String toString() {
-        return "UVCCameraHandler{" +
-                "name='" + name + '\'' +
-                '}';
+        return "UVCCameraHandler{" + "name='" + name + '\'' + '}';
     }
 }

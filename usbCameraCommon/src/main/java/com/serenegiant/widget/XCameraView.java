@@ -1,13 +1,9 @@
-package com.serenegiant.usbcameratest7.view;
+package com.serenegiant.widget;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
-import android.os.Build;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
@@ -15,15 +11,19 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usbcameracommon.CameraCallback;
+import com.serenegiant.usbcameracommon.CameraFrameCallback;
+import com.serenegiant.usbcameracommon.R;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
-import com.serenegiant.usbcameratest7.R;
-import com.serenegiant.widget.CameraViewInterface;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class XCameraView extends LinearLayout {
@@ -32,6 +32,7 @@ public class XCameraView extends LinearLayout {
     private CameraViewInterface mUVCCameraView;
     private final ImageButton mCaptureButton;
     private final BaseActivity baseActivity;
+    private CameraFrameCallback frameCallback;
 
     public XCameraView(Context context) {
         super(context);
@@ -45,7 +46,6 @@ public class XCameraView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public XCameraView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -104,9 +104,17 @@ public class XCameraView extends LinearLayout {
                 public void onError(Exception e) {
                     Log.e(TAG, "onError() called with: e = [" + e + "]");
                 }
+
+                @Override
+                public void onFrame(ByteBuffer frame, int w, int h) {
+                    if (frameCallback != null) {
+                        frameCallback.onFrame(frame, w, h);
+                    }
+                }
             });
         }
     }
+
 
     public void connect(USBMonitor.UsbControlBlock ctrlBlock) {
         connect(ctrlBlock, mHandler, mUVCCameraView, mCaptureButton);

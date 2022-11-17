@@ -29,7 +29,8 @@ ext {
     supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
     commonLibVersion = '2.12.4'
     versionBuildTool = '30.0.2'
-    versionCompiler = 28
+    versionCompiler = 32
+
     versionTarget = 27
     minSdkV = 23
 

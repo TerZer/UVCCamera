@@ -36,7 +36,7 @@ import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
-import com.serenegiant.usbcameratest7.view.XCameraView;
+import com.serenegiant.widget.XCameraView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -462,7 +462,6 @@ public final class CameraServer extends Handler {
 		
 		public void handleCaptureStill(final String path) {
 			if (DEBUG) Log.d(TAG_THREAD, "handleCaptureStill:");
-
 			mSoundPool.play(mSoundId, 0.2f, 0.2f, 0, 0, 1.0f);	// play shutter sound
 		}
 
@@ -473,10 +472,8 @@ public final class CameraServer extends Handler {
 				mMuxer = new MediaMuxerWrapper(".mp4");	// if you record audio only, ".m4a" is also OK.
 //				new MediaSurfaceEncoder(mFrameWidth, mFrameHeight, mMuxer, mMediaEncoderListener);
 				new MediaSurfaceEncoder(mMuxer, mFrameWidth, mFrameHeight, mMediaEncoderListener);
-				if (true) {
-					// for audio capturing
-					new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
-				}
+				// for audio capturing
+				new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
 				mMuxer.prepare();
 				mMuxer.startRecording();
 			} catch (final IOException e) {
