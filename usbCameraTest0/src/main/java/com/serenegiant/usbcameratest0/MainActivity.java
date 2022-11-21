@@ -196,7 +196,7 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
 		}
 
 		@Override
-		public void onDettach(final UsbDevice device) {
+		public void onDetach(final UsbDevice device) {
 			if (DEBUG) Log.v(TAG, "onDettach:");
 			Toast.makeText(MainActivity.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
 		}

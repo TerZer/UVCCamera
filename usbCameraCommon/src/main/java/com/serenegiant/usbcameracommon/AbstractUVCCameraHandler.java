@@ -64,7 +64,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 abstract class AbstractUVCCameraHandler extends Handler {
-    private static final boolean DEBUG = true;    // TODO set false on release
+    public static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "AbsUVCCameraHandler";
 
     private static final int MSG_OPEN = 0;
@@ -180,7 +180,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
                     // therefore this method will take a time to execute
                     try {
                         thread.mSync.wait();
-                    } catch (final InterruptedException e) {
+                    } catch (final InterruptedException ignored) {
                     }
                 }
             }
@@ -612,10 +612,6 @@ abstract class AbstractUVCCameraHandler extends Handler {
         private final IFrameCallback mIFrameCallback = new IFrameCallback() {
             @Override
             public void onFrame(final ByteBuffer frame) {
-                for (CameraCallback callback : mCallbacks) {
-                    callback.onFrame(frame, mUVCCamera.getCurrentWidth(), mUVCCamera.getCurrentHeight());
-                }
-
                 final MediaVideoBufferEncoder videoEncoder;
                 synchronized (mSync) {
                     videoEncoder = mVideoEncoder;
@@ -741,13 +737,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
             try {
                 final Constructor<? extends AbstractUVCCameraHandler> constructor = mHandlerClass.getDeclaredConstructor(CameraThread.class);
                 handler = constructor.newInstance(this);
-            } catch (final NoSuchMethodException e) {
-                Log.w(TAG, e);
-            } catch (final IllegalAccessException e) {
-                Log.w(TAG, e);
-            } catch (final InstantiationException e) {
-                Log.w(TAG, e);
-            } catch (final InvocationTargetException e) {
+            } catch (final NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 Log.w(TAG, e);
             }
             if (handler != null) {

@@ -62,7 +62,7 @@ public class UVCCamera {
     public static final int PIXEL_FORMAT_YUV = 1;
     public static final int PIXEL_FORMAT_RGB565 = 2;
     public static final int PIXEL_FORMAT_RGBX = 3;
-    public static final int PIXEL_FORMAT_YUV420SP = 4;
+    public static final int PIXEL_FORMAT_YUV420SP = 4;  // NV12
     public static final int PIXEL_FORMAT_NV21 = 5;        // = YVU420SemiPlanar
 
     //--------------------------------------------------------------------------------
@@ -285,7 +285,7 @@ public class UVCCamera {
         return mCurrentHeight;
     }
 
-    public void setmCurrentHeight(int mCurrentHeight) {
+    public void setCurrentHeight(int mCurrentHeight) {
         this.mCurrentHeight = mCurrentHeight;
     }
 
@@ -403,7 +403,7 @@ public class UVCCamera {
         return result;
     }
 
-    private static final void addSize(final JSONObject format, final int formatType, final int frameType, final List<Size> size_list) throws JSONException {
+    private static void addSize(final JSONObject format, final int formatType, final int frameType, final List<Size> size_list) throws JSONException {
         final JSONArray size = format.getJSONArray("size");
         final int size_nums = size.length();
         for (int j = 0; j < size_nums; j++) {

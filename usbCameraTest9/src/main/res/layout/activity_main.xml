@@ -45,8 +45,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/iv_pic"
+        android:layout_width="320dp"
+        android:layout_height="240dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

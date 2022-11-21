@@ -88,14 +88,14 @@ public final class USBMonitor {
          *
          * @param device
          */
-        public void onAttach(UsbDevice device);
+        void onAttach(UsbDevice device);
 
         /**
          * called when device dettach(after onDisconnect)
          *
          * @param device
          */
-        public void onDettach(UsbDevice device);
+        void onDetach(UsbDevice device);
 
         /**
          * called after device opend
@@ -104,7 +104,7 @@ public final class USBMonitor {
          * @param ctrlBlock
          * @param createNew
          */
-        public void onConnect(UsbDevice device, UsbControlBlock ctrlBlock, boolean createNew);
+        void onConnect(UsbDevice device, UsbControlBlock ctrlBlock, boolean createNew);
 
         /**
          * called when USB device removed or its power off (this callback is called after device closing)
@@ -112,14 +112,14 @@ public final class USBMonitor {
          * @param device
          * @param ctrlBlock
          */
-        public void onDisconnect(UsbDevice device, UsbControlBlock ctrlBlock);
+        void onDisconnect(UsbDevice device, UsbControlBlock ctrlBlock);
 
         /**
          * called when canceled or could not get permission from user
          *
          * @param device
          */
-        public void onCancel(UsbDevice device);
+        void onCancel(UsbDevice device);
     }
 
     public USBMonitor(final Context context, final OnDeviceConnectListener listener) {
@@ -145,7 +145,7 @@ public final class USBMonitor {
             destroyed = true;
             // モニターしているUSB機器を全てcloseする
             final Set<UsbDevice> keys = mCtrlBlocks.keySet();
-            if (keys != null) {
+            if (!keys.isEmpty()) {
                 UsbControlBlock ctrlBlock;
                 try {
                     for (final UsbDevice key : keys) {
@@ -155,14 +155,14 @@ public final class USBMonitor {
                         }
                     }
                 } catch (final Exception e) {
-                    Log.e(TAG, "destroy:", e);
+                    if (DEBUG) Log.e(TAG, "destroy:", e);
                 }
             }
             mCtrlBlocks.clear();
             try {
                 mAsyncHandler.getLooper().quit();
             } catch (final Exception e) {
-                Log.e(TAG, "destroy:", e);
+                if (DEBUG) Log.e(TAG, "destroy:", e);
             }
         }
     }
@@ -637,7 +637,7 @@ public final class USBMonitor {
             mAsyncHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mOnDeviceConnectListener.onDettach(device);
+                    mOnDeviceConnectListener.onDetach(device);
                 }
             });
         }

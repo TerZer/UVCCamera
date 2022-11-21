@@ -1398,7 +1398,6 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 
 	if (UNLIKELY(strmh->running)) {
 		UVC_EXIT(UVC_ERROR_BUSY);
-		LOGE("UVC_ERROR_BUSY");
 		return UVC_ERROR_BUSY;
 	}
 
@@ -1435,7 +1434,6 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 	isochronous = interface->num_altsetting > 1;
 
 	if (isochronous) {
-	    LOGD("isochronous =true");
 		MARK("isochronous transfer mode:num_altsetting=%d", interface->num_altsetting);
 		/* For isochronous streaming, we choose an appropriate altsetting for the endpoint
 		 * and set up several transfers */
@@ -1543,7 +1541,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 		ret = libusb_set_interface_alt_setting(strmh->devh->usb_devh,
 				altsetting->bInterfaceNumber, altsetting->bAlternateSetting);
 		if (UNLIKELY(ret != UVC_SUCCESS)) {
-			LOGE("libusb_set_interface_alt_setting failed");
+			UVC_DEBUG("libusb_set_interface_alt_setting failed");
 			goto fail;
 		}
 
@@ -1563,7 +1561,6 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 			libusb_set_iso_packet_lengths(transfer, endpoint_bytes_per_packet);
 		}
 	} else {
-	  LOGD("isochronous =false");
 		MARK("bulk transfer mode");
 		/** prepare for bulk transfer */
 		for (transfer_id = 0; transfer_id < LIBUVC_NUM_TRANSFER_BUFS; ++transfer_id) {
@@ -1592,7 +1589,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 	for (transfer_id = 0; transfer_id < LIBUVC_NUM_TRANSFER_BUFS; transfer_id++) {
 		ret = libusb_submit_transfer(strmh->transfers[transfer_id]);
 		if (UNLIKELY(ret != UVC_SUCCESS)) {
-			//LOGE("stream.c libusb_submit_transfer failed");
+			UVC_DEBUG("libusb_submit_transfer failed");
 			break;
 		}
 	}
@@ -1605,7 +1602,7 @@ uvc_error_t uvc_stream_start_bandwidth(uvc_stream_handle_t *strmh,
 	UVC_EXIT(ret);
 	return ret;
 fail:
-	LOGE("---->fail:ret=%d",ret);
+	LOGE("fail");
 	strmh->running = 0;
 	UVC_EXIT(ret);
 	return ret;

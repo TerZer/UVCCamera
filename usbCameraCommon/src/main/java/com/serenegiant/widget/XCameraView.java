@@ -56,9 +56,13 @@ public class XCameraView extends LinearLayout {
         mCaptureButton = findViewById(R.id.btn_capture_button);
         mCaptureButton.setVisibility(View.INVISIBLE);
         mUVCCameraView = findViewById(R.id.camera_view);
-
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
+
         createHandler();
+    }
+
+    public ImageButton getCaptureButton() {
+        return mCaptureButton;
     }
 
     public void setFrameCallback(CameraFrameCallback frameCallback) {
@@ -77,6 +81,11 @@ public class XCameraView extends LinearLayout {
                         List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
                         Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
                         uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
+                        if (frameCallback != null) {
+                            uvcCamera.setFrameCallback(frame -> {
+                                frameCallback.onFrame(frame, uvcCamera.getCurrentWidth(), uvcCamera.getCurrentHeight());
+                            }, UVCCamera.PIXEL_FORMAT_YUV420SP);
+                        }
                     }
                 }
 

@@ -301,7 +301,6 @@ uvc_error_t uvc_get_device_info(uvc_device_t *dev,
 				   0,
 				   &(internal_info->config)) != 0) {
     free(internal_info);
-    LOGE("uvc_get_device_info -> UVC_EXIT(UVC_ERROR_IO)")
     UVC_EXIT(UVC_ERROR_IO);
     return UVC_ERROR_IO;
   }

@@ -77,12 +77,9 @@ public final class MultiCameraActivity extends BaseActivity implements CameraDia
         for (int i = 0; i < count; i++) {
             View view = gridLayoutCameras.getChildAt(i);
             if (view instanceof XCameraView) {
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        currentView = (XCameraView) v;
-                        showSelectDialog(currentView);
-                    }
+                view.setOnClickListener(v -> {
+                    currentView = (XCameraView) v;
+                    showSelectDialog(currentView);
                 });
                 xCameraViews.add((XCameraView) view);
             }
@@ -162,7 +159,7 @@ public final class MultiCameraActivity extends BaseActivity implements CameraDia
         }
 
         @Override
-        public void onDettach(final UsbDevice device) {
+        public void onDetach(final UsbDevice device) {
             if (DEBUG) Log.v(TAG, "onDettach:" + device);
             Toast.makeText(MultiCameraActivity.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
         }

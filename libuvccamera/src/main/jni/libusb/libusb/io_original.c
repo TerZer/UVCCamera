@@ -1451,12 +1451,9 @@ int API_EXPORTED libusb_submit_transfer(struct libusb_transfer *transfer)
 	usbi_mutex_lock(&ctx->flying_transfers_lock);
 	r = add_to_flying_list(itransfer);
 	if (r == LIBUSB_SUCCESS) {
-		//usbi_dbg("libusb_submit_transfer() add_to_flying_list success !");
 		r = usbi_backend->submit_transfer(itransfer);
 	}
-
 	if (r != LIBUSB_SUCCESS) {
-	//	usbi_dbg("libusb_submit_transfer() add_to_flying_list or submit_transfer fail");
 		list_del(&itransfer->list);
 		arm_timerfd_for_next_timeout(ctx);
 	}

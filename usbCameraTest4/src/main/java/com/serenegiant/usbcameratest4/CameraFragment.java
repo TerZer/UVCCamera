@@ -187,7 +187,7 @@ public class CameraFragment extends BaseFragment {
 		}
 
 		@Override
-		public void onDettach(final UsbDevice device) {
+		public void onDetach(final UsbDevice device) {
 			if (DEBUG) Log.v(TAG, "OnDeviceConnectListener#onDettach:");
 			queueEvent(new Runnable() {
 				@Override
