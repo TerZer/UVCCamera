@@ -48,7 +48,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     sourceSets {
@@ -56,11 +56,6 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-//    repositories {
-//        flatDir {
-//            dirs 'jni/libuvc/libs'
-//        }
-//    }
 
     externalNativeBuild {
         ndkBuild {
@@ -100,6 +95,6 @@ task ndkClean(type: Exec, description: 'clean JNI libraries') {
 dependencies {
     implementation fileTree(dir: new File(buildDir, 'libs'), include: '*.jar')
     api(name: 'common-2.12.4', ext: 'aar')
-    api 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.annotation:annotation:1.5.0'
 }

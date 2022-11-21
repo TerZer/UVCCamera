@@ -40,7 +40,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     namespace 'com.serenegiant.usbcameracommon'
@@ -51,4 +51,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation(name: 'common-2.12.4', ext: 'aar')
     implementation project(':libuvccamera')
+    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
 }
