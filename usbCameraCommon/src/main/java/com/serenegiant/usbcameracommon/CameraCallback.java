@@ -19,4 +19,6 @@ public interface CameraCallback {
 
     void onFrame(ByteBuffer frame, int w, int h);
 
+    void onCaptureFinish(String path);
+
 }

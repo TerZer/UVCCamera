@@ -30,6 +30,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.df.lib_seete6.PresenterImpl;
 import com.df.lib_seete6.SeetaContract;
 import com.df.lib_seete6.config.EnginConfig;
@@ -37,7 +39,6 @@ import com.df.lib_seete6.utils.EnginHelper;
 import com.df.lib_seete6.view.FaceRectView;
 import com.seeta.sdk.FaceAntiSpoofing;
 import com.serenegiant.YUVToBitmap;
-import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.widget.XCameraView;
 
@@ -46,7 +47,7 @@ import org.opencv.core.Rect;
 
 import java.io.File;
 
-public final class MainActivity extends BaseActivity implements SeetaContract.ViewInterface {
+public final class MainActivity extends AppCompatActivity implements SeetaContract.ViewInterface {
     private static final String TAG = "MainActivity";
     private PresenterImpl presenter;
     private FaceRectView faceRectView;
@@ -97,6 +98,9 @@ public final class MainActivity extends BaseActivity implements SeetaContract.Vi
         cameraView.getCaptureButton().setOnClickListener(v -> {
             isNeedTakePic = true;
             presenter.takePicture("/sdcard/", "uvc.jpg");
+            cameraView.capture("/sdcard/text.png", (p) -> {
+                Log.d(TAG, "capture() called with: path= [" + p+ "]");
+            });
         });
 
         mUSBMonitor = new USBMonitor(this, mOnDeviceConnectListener);

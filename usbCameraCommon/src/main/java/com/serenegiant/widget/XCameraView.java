@@ -12,14 +12,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usbcameracommon.CameraCallback;
 import com.serenegiant.usbcameracommon.CameraFrameCallback;
+import com.serenegiant.usbcameracommon.CaptureStillListener;
 import com.serenegiant.usbcameracommon.R;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 
@@ -31,8 +30,9 @@ public class XCameraView extends LinearLayout {
     private UVCCameraHandler mHandler;
     private CameraViewInterface mUVCCameraView;
     private final ImageButton mCaptureButton;
-    private final BaseActivity baseActivity;
     private CameraFrameCallback frameCallback;
+    private CameraCallback cameraCallback;
+    private CaptureStillListener captureStillListener;
 
     public XCameraView(Context context) {
         super(context);
@@ -51,13 +51,11 @@ public class XCameraView extends LinearLayout {
     }
 
     {
-        baseActivity = (BaseActivity) getContext();
         View.inflate(getContext(), R.layout.layout_x_camera_view, this);
         mCaptureButton = findViewById(R.id.btn_capture_button);
         mCaptureButton.setVisibility(View.INVISIBLE);
         mUVCCameraView = findViewById(R.id.camera_view);
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
-
         createHandler();
     }
 
@@ -67,6 +65,14 @@ public class XCameraView extends LinearLayout {
 
     public void setFrameCallback(CameraFrameCallback frameCallback) {
         this.frameCallback = frameCallback;
+    }
+
+    public void setCameraCallback(CameraCallback cameraCallback) {
+        this.cameraCallback = cameraCallback;
+    }
+
+    public void setCaptureStillListener(CaptureStillListener captureStillListener) {
+        this.captureStillListener = captureStillListener;
     }
 
     private void createHandler() {
@@ -87,42 +93,75 @@ public class XCameraView extends LinearLayout {
                             }, UVCCamera.PIXEL_FORMAT_YUV420SP);
                         }
                     }
+                    if (cameraCallback != null) {
+                        cameraCallback.onOpen();
+                    }
                 }
 
                 @Override
                 public void onClose() {
                     Log.d(TAG, "onClose() called");
+                    if (cameraCallback != null) {
+                        cameraCallback.onClose();
+                    }
                 }
 
                 @Override
                 public void onStartPreview() {
+                    if (cameraCallback != null) {
+                        cameraCallback.onStartPreview();
+                    }
                     Log.d(TAG, "onStartPreview() called");
                 }
 
                 @Override
                 public void onStopPreview() {
                     Log.d(TAG, "onStopPreview() called");
+                    if (cameraCallback != null) {
+                        cameraCallback.onStopPreview();
+                    }
                 }
 
                 @Override
                 public void onStartRecording() {
                     Log.d(TAG, "onStartRecording() called");
+                    if (cameraCallback != null) {
+                        cameraCallback.onStartRecording();
+                    }
                 }
 
                 @Override
                 public void onStopRecording() {
                     Log.d(TAG, "onStopRecording() called");
+                    if (cameraCallback != null) {
+                        cameraCallback.onStopRecording();
+                    }
                 }
 
                 @Override
                 public void onError(Exception e) {
                     Log.e(TAG, "onError() called with: e = [" + e + "]");
+
+                    if (cameraCallback != null) {
+                        cameraCallback.onError(e);
+                    }
+                }
+
+                @Override
+                public void onCaptureFinish(String path) {
+                    Log.d(TAG, "onCaptureFinish() called with: path = [" + path + "]");
+                    if (cameraCallback != null) {
+                        cameraCallback.onCaptureFinish(path);
+                    }
+                    if (captureStillListener != null) {
+                        captureStillListener.onFinish(path);
+                    }
                 }
 
                 @Override
                 public void onFrame(ByteBuffer frame, int w, int h) {
-                    if (frameCallback != null) {
-                        frameCallback.onFrame(frame, w, h);
+                    if (cameraCallback != null) {
+                        cameraCallback.onFrame(frame, w, h);
                     }
                 }
             });
@@ -150,10 +189,13 @@ public class XCameraView extends LinearLayout {
     public void disConnect(UsbDevice device) {
         Log.d(TAG, "disConnect() called with: device = [" + device + "]");
         if ((mHandler != null) && !mHandler.isEqual(device)) {
-            baseActivity.queueEvent(() -> {
-                mHandler.close();
-                setCameraButton();
-            }, 0);
+            mCaptureButton.post(new Runnable() {
+                @Override
+                public void run() {
+                    mHandler.close();
+                    setCameraButton();
+                }
+            });
         }
     }
 
@@ -190,27 +232,13 @@ public class XCameraView extends LinearLayout {
         return mHandler.isOpened();
     }
 
-    public void capture() {
-        capture(mHandler, mCaptureButton);
+    public void capture(String path) {
+        mHandler.captureStill(path);
     }
 
-
-    private void capture(UVCCameraHandler cameraHandler, ImageButton imageButton) {
-        if (cameraHandler != null) {
-            if (cameraHandler.isOpened()) {
-                AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
-                if (BaseActivity.checkPermissionWriteExternalStorage(appCompatActivity) && BaseActivity.checkPermissionAudio(appCompatActivity)) {
-                    if (!cameraHandler.isRecording()) {
-                        imageButton.setColorFilter(0xffff0000);    // turn red
-                        cameraHandler.startRecording();
-                    } else {
-                        imageButton.setColorFilter(0);    // return to default color
-                        cameraHandler.stopRecording();
-                    }
-                }
-            }
-        }
+    public void capture(String path, CaptureStillListener captureStillListener) {
+        this.captureStillListener = captureStillListener;
+        mHandler.captureStill(path);
     }
-
 
 }

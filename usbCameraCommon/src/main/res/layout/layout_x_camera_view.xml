@@ -29,8 +29,7 @@
         android:layout_alignLeft="@+id/camera_view"
         android:layout_alignTop="@+id/camera_view"
         android:layout_alignRight="@+id/camera_view"
-        android:layout_alignBottom="@+id/camera_view"
-        android:src="@drawable/border" />
+        android:layout_alignBottom="@+id/camera_view" />
 
     <ImageButton
         android:id="@+id/btn_capture_button"

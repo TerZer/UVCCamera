@@ -538,6 +538,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
                         os.flush();
                         mHandler.sendMessage(mHandler.obtainMessage(MSG_MEDIA_UPDATE, outputFile.getPath()));
+                        for (CameraCallback callback : mCallbacks) {
+                            callback.onCaptureFinish(path);
+                        }
+
                     } catch (final IOException e) {
                         e.printStackTrace();
                     }
