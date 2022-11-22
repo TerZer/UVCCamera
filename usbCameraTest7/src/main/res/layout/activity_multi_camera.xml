@@ -39,14 +39,14 @@
         android:orientation="horizontal"
         android:rowCount="4">
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_1"
             android:layout_width="320dp"
             android:layout_height="240dp"
             android:layout_margin="14dp"
             android:tag="xcv_1" />
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_2"
             android:layout_width="320dp"
             android:layout_height="240dp"
@@ -54,14 +54,14 @@
             android:tag="xcv_2" />
 
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_3"
             android:layout_width="320dp"
             android:layout_height="240dp"
             android:layout_margin="14dp"
             android:tag="xcv_3" />
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_4"
             android:layout_width="320dp"
             android:layout_height="240dp"
@@ -69,14 +69,14 @@
             android:tag="xcv_4" />
 
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_5"
             android:layout_width="320dp"
             android:layout_height="240dp"
             android:layout_margin="14dp"
             android:tag="xcv_5" />
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_6"
             android:layout_width="320dp"
             android:layout_height="240dp"
@@ -84,14 +84,14 @@
             android:tag="xcv_6" />
 
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_7"
             android:layout_width="320dp"
             android:layout_height="240dp"
             android:layout_margin="14dp"
             android:tag="xcv_7" />
 
-        <com.serenegiant.widget.XCameraView
+        <com.serenegiant.widget.XUSBCameraView
             android:id="@+id/xcv_8"
             android:layout_width="320dp"
             android:layout_height="240dp"

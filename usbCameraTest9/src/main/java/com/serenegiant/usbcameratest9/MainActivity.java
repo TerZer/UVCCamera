@@ -40,7 +40,7 @@ import com.df.lib_seete6.view.FaceRectView;
 import com.seeta.sdk.FaceAntiSpoofing;
 import com.serenegiant.YUVToBitmap;
 import com.serenegiant.usb.USBMonitor;
-import com.serenegiant.widget.XCameraView;
+import com.serenegiant.widget.XUSBCameraView;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -51,7 +51,7 @@ public final class MainActivity extends AppCompatActivity implements SeetaContra
     private static final String TAG = "MainActivity";
     private PresenterImpl presenter;
     private FaceRectView faceRectView;
-    private XCameraView cameraView;
+    private XUSBCameraView cameraView;
     private ImageView ivPic;
     private USBMonitor mUSBMonitor;
     private YUVToBitmap nv21ToBitmap;
