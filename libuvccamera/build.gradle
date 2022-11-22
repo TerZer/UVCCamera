@@ -80,7 +80,7 @@ String getNdkBuildPath() {
 task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
     println('executing ndkBuild')
     def ndkBuildPath = getNdkBuildPath();
-    commandLine ndkBuildPath, '-j8', '-C', file('src/main').absolutePath
+    commandLine ndkBuildPath, '-j10', '-C', file('src/main').absolutePath
 }
 
 task ndkClean(type: Exec, description: 'clean JNI libraries') {
