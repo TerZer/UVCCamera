@@ -45,7 +45,8 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Spinner;
 
-import com.serenegiant.uvccamera.R;
+import com.serenegiant.libuvccamera.R;
+
 
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class CameraDialog extends DialogFragment {
