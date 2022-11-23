@@ -68,7 +68,7 @@ public final class MainActivity extends AppCompatActivity implements SeetaContra
         @Override
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
             Log.d(TAG, "onConnect() called with: device = [" + device + "], ctrlBlock = [" + ctrlBlock + "], createNew = [" + createNew + "]");
-            cameraView.connect(ctrlBlock);
+            cameraView.connect(ctrlBlock, MainActivity.this);
         }
 
         @Override
@@ -99,7 +99,7 @@ public final class MainActivity extends AppCompatActivity implements SeetaContra
             isNeedTakePic = true;
             presenter.takePicture("/sdcard/", "uvc.jpg");
             cameraView.capture("/sdcard/text.png", (p) -> {
-                Log.d(TAG, "capture() called with: path= [" + p+ "]");
+                Log.d(TAG, "capture() called with: path= [" + p + "]");
             });
         });
 

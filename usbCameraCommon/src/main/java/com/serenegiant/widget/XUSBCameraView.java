@@ -35,6 +35,7 @@ public class XUSBCameraView extends LinearLayout {
     private CameraCallback cameraCallback;
     private CaptureStillListener captureStillListener;
     private USBMonitor.UsbControlBlock ctrlBlock;
+    private Activity ownerActivity;
 
     public XUSBCameraView(Context context) {
         super(context);
@@ -58,12 +59,14 @@ public class XUSBCameraView extends LinearLayout {
         mCaptureButton.setVisibility(View.INVISIBLE);
         mUVCCameraView = findViewById(R.id.camera_view);
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
-
-        createHandler();
     }
 
     public ImageButton getCaptureButton() {
         return mCaptureButton;
+    }
+
+    public void setOwnerActivity(Activity ownerActivity) {
+        this.ownerActivity = ownerActivity;
     }
 
     public void setFrameCallback(CameraFrameCallback frameCallback) {
@@ -87,107 +90,120 @@ public class XUSBCameraView extends LinearLayout {
     }
 
     private void createHandler() {
-        Context context = getContext();
-        if (context instanceof Activity) {
-            uvcCameraHandler = UVCCameraHandler.createHandler((Activity) context, mUVCCameraView, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, 0.5f);
-            uvcCameraHandler.addCallback(new CameraCallback() {
-                @Override
-                public void onOpen() {
-                    UVCCamera uvcCamera = uvcCameraHandler.getUVCCamera();
-                    if (uvcCamera != null) {
-                        List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
-                        Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
-                        uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
-                        if (frameCallback != null) {
-                            uvcCamera.setFrameCallback(frame -> {
-                                frameCallback.onFrame(frame, uvcCamera.getCurrentWidth(), uvcCamera.getCurrentHeight());
-                            }, UVCCamera.PIXEL_FORMAT_YUV420SP);
-                        }
-                    }
-                    if (cameraCallback != null) {
-                        cameraCallback.onOpen();
-                    }
-                }
-
-                @Override
-                public void onClose() {
-                    Log.d(TAG, "onClose() called");
-                    if (cameraCallback != null) {
-                        cameraCallback.onClose();
-                    }
-                }
-
-                @Override
-                public void onStartPreview() {
-                    if (cameraCallback != null) {
-                        cameraCallback.onStartPreview();
-                    }
-                    Log.d(TAG, "onStartPreview() called");
-                }
-
-                @Override
-                public void onStopPreview() {
-                    Log.d(TAG, "onStopPreview() called");
-                    if (cameraCallback != null) {
-                        cameraCallback.onStopPreview();
-                    }
-                }
-
-                @Override
-                public void onStartRecording() {
-                    Log.d(TAG, "onStartRecording() called");
-                    if (cameraCallback != null) {
-                        cameraCallback.onStartRecording();
-                    }
-                }
-
-                @Override
-                public void onStopRecording() {
-                    Log.d(TAG, "onStopRecording() called");
-                    if (cameraCallback != null) {
-                        cameraCallback.onStopRecording();
-                    }
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e(TAG, "onError() called with: e = [" + e + "]");
-
-                    if (cameraCallback != null) {
-                        cameraCallback.onError(e);
-                    }
-                }
-
-                @Override
-                public void onCaptureFinish(String path) {
-                    Log.d(TAG, "onCaptureFinish() called with: path = [" + path + "]");
-                    if (cameraCallback != null) {
-                        cameraCallback.onCaptureFinish(path);
-                    }
-                    if (captureStillListener != null) {
-                        captureStillListener.onFinish(path);
-                    }
-                }
-
-                @Override
-                public void onFrame(ByteBuffer frame, int w, int h) {
-                    if (cameraCallback != null) {
-                        cameraCallback.onFrame(frame, w, h);
-                    }
-                }
-            });
+        if (uvcCameraHandler != null) {
+            return;
         }
+        if (ownerActivity == null) {
+            Log.e(TAG, "createHandler() fail,cause ownerActivity is null");
+            return;
+        }
+        uvcCameraHandler = UVCCameraHandler.createHandler(ownerActivity, mUVCCameraView, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, 0.5f);
+        uvcCameraHandler.addCallback(new CameraCallback() {
+            @Override
+            public void onOpen() {
+                UVCCamera uvcCamera = uvcCameraHandler.getUVCCamera();
+                if (uvcCamera != null) {
+                    List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
+                    Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
+                    uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
+                    if (frameCallback != null) {
+                        uvcCamera.setFrameCallback(frame -> {
+                            frameCallback.onFrame(frame, uvcCamera.getCurrentWidth(), uvcCamera.getCurrentHeight());
+                        }, UVCCamera.PIXEL_FORMAT_YUV420SP);
+                    }
+                }
+                if (cameraCallback != null) {
+                    cameraCallback.onOpen();
+                }
+            }
+
+            @Override
+            public void onClose() {
+                Log.d(TAG, "onClose() called");
+                if (cameraCallback != null) {
+                    cameraCallback.onClose();
+                }
+            }
+
+            @Override
+            public void onStartPreview() {
+                if (cameraCallback != null) {
+                    cameraCallback.onStartPreview();
+                }
+                Log.d(TAG, "onStartPreview() called");
+            }
+
+            @Override
+            public void onStopPreview() {
+                Log.d(TAG, "onStopPreview() called");
+                if (cameraCallback != null) {
+                    cameraCallback.onStopPreview();
+                }
+            }
+
+            @Override
+            public void onStartRecording() {
+                Log.d(TAG, "onStartRecording() called");
+                if (cameraCallback != null) {
+                    cameraCallback.onStartRecording();
+                }
+            }
+
+            @Override
+            public void onStopRecording() {
+                Log.d(TAG, "onStopRecording() called");
+                if (cameraCallback != null) {
+                    cameraCallback.onStopRecording();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "onError() called with: e = [" + e + "]");
+                if (cameraCallback != null) {
+                    cameraCallback.onError(e);
+                }
+            }
+
+            @Override
+            public void onCaptureFinish(String path) {
+                Log.d(TAG, "onCaptureFinish() called with: path = [" + path + "]");
+                if (cameraCallback != null) {
+                    cameraCallback.onCaptureFinish(path);
+                }
+                if (captureStillListener != null) {
+                    captureStillListener.onFinish(path);
+                }
+            }
+
+            @Override
+            public void onFrame(ByteBuffer frame, int w, int h) {
+                if (cameraCallback != null) {
+                    cameraCallback.onFrame(frame, w, h);
+                }
+            }
+        });
     }
 
+    public void connect(USBMonitor.UsbControlBlock ctrlBlock, Activity ownerActivity) {
+        this.ownerActivity = ownerActivity;
+        createHandler();
+        connect(ctrlBlock, uvcCameraHandler, mUVCCameraView, mCaptureButton);
+    }
 
     public void connect(USBMonitor.UsbControlBlock ctrlBlock) {
+        createHandler();
         connect(ctrlBlock, uvcCameraHandler, mUVCCameraView, mCaptureButton);
     }
 
 
     private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface, ImageButton button) {
-        this.ctrlBlock = ctrlBlock;
         Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock + "], handler = [" + handler + "], cameraViewInterface = [" + cameraViewInterface + "], button = [" + button + "]");
+        if (handler == null) {
+            Log.e(TAG, "connect() called with fail,cause handler is null");
+            return;
+        }
+        this.ctrlBlock = ctrlBlock;
         if (handler.isOpened()) {
             return;
         }
