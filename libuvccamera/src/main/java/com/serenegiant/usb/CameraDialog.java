@@ -48,7 +48,6 @@ import android.widget.Spinner;
 import com.serenegiant.libuvccamera.R;
 
 
-@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class CameraDialog extends DialogFragment {
     private static final String TAG = CameraDialog.class.getSimpleName();
     public interface CameraDialogParent {
