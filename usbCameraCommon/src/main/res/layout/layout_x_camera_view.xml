@@ -13,7 +13,7 @@
         android:padding="4dp"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        tools:text="12345" />
+        tools:text="test" />
 
     <com.serenegiant.widget.UVCCameraTextureView
         android:id="@+id/camera_view"
@@ -29,10 +29,10 @@
         android:layout_alignLeft="@+id/camera_view"
         android:layout_alignTop="@+id/camera_view"
         android:layout_alignRight="@+id/camera_view"
-        android:layout_alignBottom="@+id/camera_view" />
+        android:layout_alignBottom="@+id/camera_view"
+        android:visibility="gone" />
 
     <ImageButton
-        android:visibility="gone"
         android:id="@+id/btn_capture_button"
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
@@ -41,7 +41,8 @@
         android:layout_marginBottom="6dp"
         android:background="@null"
         android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_menu_camera" />
+        android:src="@android:drawable/ic_menu_camera"
+        android:visibility="gone" />
 </RelativeLayout>
 
 
