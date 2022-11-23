@@ -32,6 +32,7 @@
         android:layout_alignBottom="@+id/camera_view" />
 
     <ImageButton
+        android:visibility="gone"
         android:id="@+id/btn_capture_button"
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
@@ -39,7 +40,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
         android:background="@null"
-        android:onClick="onCaptureViewClick"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_camera" />
 </RelativeLayout>

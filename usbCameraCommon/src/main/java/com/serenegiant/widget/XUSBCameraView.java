@@ -231,6 +231,19 @@ public class XUSBCameraView extends LinearLayout {
         }
     }
 
+    public boolean isOpened() {
+        return uvcCameraHandler != null && uvcCameraHandler.isOpened();
+    }
+
+    public void capture(String path) {
+        uvcCameraHandler.captureStill(path);
+    }
+
+    public void capture(String path, CaptureStillListener captureStillListener) {
+        this.captureStillListener = captureStillListener;
+        uvcCameraHandler.captureStill(path);
+    }
+
     public void start(SurfaceHolder holder) {
         Log.d(TAG, "start() called with: holder = [" + holder + "]");
         if (uvcCameraHandler == null) {
@@ -261,19 +274,6 @@ public class XUSBCameraView extends LinearLayout {
         }
     }
 
-    public boolean isOpened() {
-        return uvcCameraHandler != null && uvcCameraHandler.isOpened();
-    }
-
-
-    public void capture(String path) {
-        uvcCameraHandler.captureStill(path);
-    }
-
-    public void capture(String path, CaptureStillListener captureStillListener) {
-        this.captureStillListener = captureStillListener;
-        uvcCameraHandler.captureStill(path);
-    }
 
     public void release() {
         Log.d(TAG, "release() called");
