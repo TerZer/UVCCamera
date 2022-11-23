@@ -216,7 +216,7 @@ public class XUSBCameraView extends LinearLayout {
 
     public void disConnect(UsbDevice device) {
         Log.d(TAG, "disConnect() called with: device = [" + device + "]");
-        if ((uvcCameraHandler != null) && !uvcCameraHandler.isEqual(device)) {
+        if ((uvcCameraHandler != null) && uvcCameraHandler.isEqual(device)) {
             mCaptureButton.post(() -> {
                 uvcCameraHandler.close();
                 setCameraButton();
