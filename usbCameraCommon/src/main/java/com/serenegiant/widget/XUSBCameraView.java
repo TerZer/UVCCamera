@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
+import com.serenegiant.usbcameracommon.BuildConfig;
 import com.serenegiant.usbcameracommon.CameraCallback;
 import com.serenegiant.usbcameracommon.CameraFrameCallback;
 import com.serenegiant.usbcameracommon.CaptureStillListener;
@@ -30,7 +31,7 @@ public class XUSBCameraView extends LinearLayout {
     private static final String TAG = "XCameraView";
     private UVCCameraHandler uvcCameraHandler;
     private UVCCameraTextureView mUVCCameraView;
-    private final ImageButton mCaptureButton;
+    private ImageButton mCaptureButton;
     private CameraFrameCallback frameCallback;
     private CameraCallback cameraCallback;
     private CaptureStillListener captureStillListener;
@@ -56,12 +57,17 @@ public class XUSBCameraView extends LinearLayout {
     {
         View.inflate(getContext(), R.layout.layout_x_camera_view, this);
         mCaptureButton = findViewById(R.id.btn_capture_button);
-        mCaptureButton.setVisibility(View.INVISIBLE);
+        if (BuildConfig.DEBUG) {
+            // mCaptureButton.setVisibility(View.INVISIBLE);
+        }
         mUVCCameraView = findViewById(R.id.camera_view);
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
     }
 
     public ImageButton getCaptureButton() {
+        if (mCaptureButton == null) {
+            mCaptureButton = findViewById(R.id.btn_capture_button);
+        }
         return mCaptureButton;
     }
 
@@ -188,17 +194,16 @@ public class XUSBCameraView extends LinearLayout {
     public void connect(USBMonitor.UsbControlBlock ctrlBlock, Activity ownerActivity) {
         this.ownerActivity = ownerActivity;
         createHandler();
-        connect(ctrlBlock, uvcCameraHandler, mUVCCameraView, mCaptureButton);
+        connect(ctrlBlock, uvcCameraHandler, mUVCCameraView);
     }
 
     public void connect(USBMonitor.UsbControlBlock ctrlBlock) {
         createHandler();
-        connect(ctrlBlock, uvcCameraHandler, mUVCCameraView, mCaptureButton);
+        connect(ctrlBlock, uvcCameraHandler, mUVCCameraView);
     }
 
 
-    private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface, ImageButton button) {
-        Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock + "], handler = [" + handler + "], cameraViewInterface = [" + cameraViewInterface + "], button = [" + button + "]");
+    private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface) {
         if (handler == null) {
             Log.e(TAG, "connect() called with fail,cause handler is null");
             return;
@@ -210,26 +215,16 @@ public class XUSBCameraView extends LinearLayout {
         handler.open(ctrlBlock);
         final SurfaceTexture st = cameraViewInterface.getSurfaceTexture();
         handler.startPreview(new Surface(st));
-        post(() -> button.setVisibility(View.VISIBLE));
     }
 
 
     public void disConnect(UsbDevice device) {
         Log.d(TAG, "disConnect() called with: device = [" + device + "]");
         if ((uvcCameraHandler != null) && uvcCameraHandler.isEqual(device)) {
-            mCaptureButton.post(() -> {
-                uvcCameraHandler.close();
-                setCameraButton();
-            });
+            uvcCameraHandler.close();
         }
     }
 
-
-    private void setCameraButton() {
-        if ((uvcCameraHandler != null) && !uvcCameraHandler.isOpened() && (mCaptureButton != null)) {
-            mCaptureButton.setVisibility(View.INVISIBLE);
-        }
-    }
 
     public boolean isOpened() {
         return uvcCameraHandler != null && uvcCameraHandler.isOpened();
