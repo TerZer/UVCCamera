@@ -71,7 +71,7 @@ public final class USBMonitor {
     private final UsbManager mUsbManager;
     private final OnDeviceConnectListener mOnDeviceConnectListener;
     private PendingIntent mPermissionIntent = null;
-    private List<DeviceFilter> mDeviceFilters = new ArrayList<DeviceFilter>();
+    private final List<DeviceFilter> mDeviceFilters = new ArrayList<DeviceFilter>();
 
     /**
      * コールバックをワーカースレッドで呼び出すためのハンドラー
@@ -141,29 +141,30 @@ public final class USBMonitor {
     public void destroy() {
         if (DEBUG) Log.i(TAG, "destroy:");
         unregister();
-        if (!destroyed) {
-            destroyed = true;
-            // モニターしているUSB機器を全てcloseする
-            final Set<UsbDevice> keys = mCtrlBlocks.keySet();
-            if (!keys.isEmpty()) {
-                UsbControlBlock ctrlBlock;
-                try {
-                    for (final UsbDevice key : keys) {
-                        ctrlBlock = mCtrlBlocks.remove(key);
-                        if (ctrlBlock != null) {
-                            ctrlBlock.close();
-                        }
-                    }
-                } catch (final Exception e) {
-                    if (DEBUG) Log.e(TAG, "destroy:", e);
-                }
-            }
-            mCtrlBlocks.clear();
+        if (destroyed) {
+            return;
+        }
+        destroyed = true;
+        // モニターしているUSB機器を全てcloseする
+        final Set<UsbDevice> keys = mCtrlBlocks.keySet();
+        if (!keys.isEmpty()) {
+            UsbControlBlock ctrlBlock;
             try {
-                mAsyncHandler.getLooper().quit();
+                for (final UsbDevice key : keys) {
+                    ctrlBlock = mCtrlBlocks.remove(key);
+                    if (ctrlBlock != null) {
+                        ctrlBlock.close();
+                    }
+                }
             } catch (final Exception e) {
                 if (DEBUG) Log.e(TAG, "destroy:", e);
             }
+        }
+        mCtrlBlocks.clear();
+        try {
+            mAsyncHandler.getLooper().quit();
+        } catch (final Exception e) {
+            if (DEBUG) Log.e(TAG, "destroy:", e);
         }
     }
 
@@ -408,8 +409,12 @@ public final class USBMonitor {
      * @return true: 指定したUsbDeviceにパーミッションがある
      * @throws IllegalStateException
      */
-    public final boolean hasPermission(final UsbDevice device) throws IllegalStateException {
-        if (destroyed) throw new IllegalStateException("already destroyed");
+    public boolean hasPermission(final UsbDevice device) throws IllegalStateException {
+        //if (destroyed) throw new IllegalStateException("already destroyed");
+        if (destroyed) {
+            Log.e(TAG, "hasPermission() called fail: destroyed = [" + destroyed + "]");
+            return false;
+        }
         return updatePermission(device, device != null && mUsbManager.hasPermission(device));
     }
 
@@ -561,12 +566,7 @@ public final class USBMonitor {
                 if (mOnDeviceConnectListener != null) {
                     for (int i = 0; i < n; i++) {
                         final UsbDevice device = devices.get(i);
-                        mAsyncHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mOnDeviceConnectListener.onAttach(device);
-                            }
-                        });
+                        mAsyncHandler.post(() -> mOnDeviceConnectListener.onAttach(device));
                     }
                 }
             }
