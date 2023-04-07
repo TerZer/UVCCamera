@@ -320,19 +320,18 @@ public final class USBMonitor {
         if (destroyed) throw new IllegalStateException("already destroyed");
         final HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         final List<UsbDevice> result = new ArrayList<UsbDevice>();
-        if (deviceList != null) {
-            if ((filters == null) || filters.isEmpty()) {
-                result.addAll(deviceList.values());
-            } else {
-                for (final UsbDevice device : deviceList.values()) {
-                    for (final DeviceFilter filter : filters) {
-                        if ((filter != null) && filter.matches(device)) {
-                            // when filter matches
-                            if (!filter.isExclude) {
-                                result.add(device);
-                            }
-                            break;
+        if (deviceList == null) return result;
+        if ((filters == null) || filters.isEmpty()) {
+            result.addAll(deviceList.values());
+        } else {
+            for (final UsbDevice device : deviceList.values()) {
+                for (final DeviceFilter filter : filters) {
+                    if ((filter != null) && filter.matches(device)) {
+                        // when filter matches
+                        if (!filter.isExclude) {
+                            result.add(device);
                         }
+                        break;
                     }
                 }
             }
@@ -563,12 +562,12 @@ public final class USBMonitor {
             }
             if ((n > mDeviceCounts) || (m > hasPermissionCounts)) {
                 mDeviceCounts = n;
-                if (mOnDeviceConnectListener != null) {
-                    for (int i = 0; i < n; i++) {
-                        final UsbDevice device = devices.get(i);
-                        mAsyncHandler.post(() -> mOnDeviceConnectListener.onAttach(device));
-                    }
+                if (mOnDeviceConnectListener == null) return;
+                for (int i = 0; i < n; i++) {
+                    final UsbDevice device = devices.get(i);
+                    mAsyncHandler.post(() -> mOnDeviceConnectListener.onAttach(device));
                 }
+
             }
             mAsyncHandler.postDelayed(this, 2000);    // confirm every 2 seconds
         }

@@ -370,6 +370,13 @@ public class UVCCamera {
         return getSupportedSize(type, mSupportedSize);
     }
 
+    public Size getMaxSize() {
+        List<Size> sizes = getSupportedSizeList();
+        if (sizes.isEmpty()) return null;
+        return sizes.get(sizes.size() - 1);
+    }
+
+
     public static List<Size> getSupportedSize(final int type, final String supportedSize) {
         final List<Size> result = new ArrayList<Size>();
         if (!TextUtils.isEmpty(supportedSize))
@@ -389,14 +396,10 @@ public class UVCCamera {
             } catch (final JSONException e) {
                 e.printStackTrace();
             }
-        Collections.sort(result, new Comparator<Size>() {
-            @Override
-            public int compare(Size o1, Size o2) {
-                if (o1 == o2) {
-                    return 0;
-                }
-                return Integer.compare(o1.width * o1.height, o2.width * o2.height);
-            }
+
+        Collections.sort(result, (o1, o2) -> {
+            if (o1 == o2) return 0;
+            return Integer.compare(o1.width * o1.height, o2.width * o2.height);
         });
         return result;
     }

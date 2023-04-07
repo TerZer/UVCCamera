@@ -462,13 +462,13 @@ abstract class AbstractUVCCameraHandler extends Handler {
             final UVCCamera camera;
             synchronized (mSync) {
                 camera = mUVCCamera;
-                mUVCCamera = null;
+                if (camera != null) {
+                    camera.stopPreview();
+                    camera.destroy();
+                    callOnClose();
+                }
             }
-            if (camera != null) {
-                camera.stopPreview();
-                camera.destroy();
-                callOnClose();
-            }
+            mUVCCamera = null;
         }
 
         public void handleStartPreview(final Object surface) {

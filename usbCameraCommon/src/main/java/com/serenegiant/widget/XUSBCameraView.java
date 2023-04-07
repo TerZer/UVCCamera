@@ -1,6 +1,7 @@
 package com.serenegiant.widget;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
@@ -13,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Lifecycle;
 
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
@@ -25,7 +28,6 @@ import com.serenegiant.usbcameracommon.R;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 
 import java.nio.ByteBuffer;
-import java.util.List;
 
 public class XUSBCameraView extends LinearLayout {
     private static final String TAG = "XCameraView";
@@ -95,32 +97,27 @@ public class XUSBCameraView extends LinearLayout {
         mUVCCameraView.setAspectRatio(aspectRatio);
     }
 
+    public boolean autoOpen() {
+        if (ownerActivity == null) return false;
+
+
+        return true;
+    }
+
+
     private void createHandler() {
-        if (uvcCameraHandler != null) {
+        if (uvcCameraHandler != null) return;
+
+        if (ownerActivity == null || ownerActivity.isDestroyed()) {
+            Log.e(TAG, "createHandler() fail,cause ownerActivity is null or is Destroyed ");
             return;
         }
-        if (ownerActivity == null) {
-            Log.e(TAG, "createHandler() fail,cause ownerActivity is null");
-            return;
-        }
+
         uvcCameraHandler = UVCCameraHandler.createHandler(ownerActivity, mUVCCameraView, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, 0.5f);
         uvcCameraHandler.addCallback(new CameraCallback() {
             @Override
             public void onOpen() {
-                UVCCamera uvcCamera = uvcCameraHandler.getUVCCamera();
-                if (uvcCamera != null) {
-                    List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
-                    Size maxSize = supportedSizeList.get(supportedSizeList.size() - 1);
-                    uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
-                    if (frameCallback != null) {
-                        uvcCamera.setFrameCallback(frame -> {
-                            frameCallback.onFrame(frame, uvcCamera.getCurrentWidth(), uvcCamera.getCurrentHeight());
-                        }, UVCCamera.PIXEL_FORMAT_YUV420SP);
-                    }
-                }
-                if (cameraCallback != null) {
-                    cameraCallback.onOpen();
-                }
+                prepareCamera();
             }
 
             @Override
@@ -191,6 +188,32 @@ public class XUSBCameraView extends LinearLayout {
         });
     }
 
+    private void prepareCamera() {
+        UVCCamera uvcCamera = uvcCameraHandler.getUVCCamera();
+        if (uvcCamera == null) {
+            Log.e(TAG, "prepareCamera() called fail,can not get uvcCamera!");
+            return;
+        }
+
+        Size maxSize = uvcCamera.getMaxSize();
+        if (maxSize == null) {
+            Log.e(TAG, "prepareCamera() called  fail, not find max size!");
+            return;
+        }
+        Log.i(TAG, "prepareCamera() called fin max size:" + maxSize);
+        uvcCamera.setPreviewSize(maxSize.width, maxSize.height);
+
+        if (frameCallback != null) {
+            uvcCamera.setFrameCallback(frame -> {
+                frameCallback.onFrame(frame, uvcCamera.getCurrentWidth(), uvcCamera.getCurrentHeight());
+            }, UVCCamera.PIXEL_FORMAT_YUV420SP);
+        }
+
+        if (cameraCallback != null) {
+            cameraCallback.onOpen();
+        }
+    }
+
     public void connect(USBMonitor.UsbControlBlock ctrlBlock, Activity ownerActivity) {
         this.ownerActivity = ownerActivity;
         createHandler();
@@ -201,7 +224,6 @@ public class XUSBCameraView extends LinearLayout {
         createHandler();
         connect(ctrlBlock, uvcCameraHandler, mUVCCameraView);
     }
-
 
     private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface) {
         if (handler == null) {
@@ -217,14 +239,12 @@ public class XUSBCameraView extends LinearLayout {
         handler.startPreview(new Surface(st));
     }
 
-
     public void disConnect(UsbDevice device) {
         Log.d(TAG, "disConnect() called with: device = [" + device + "]");
         if ((uvcCameraHandler != null) && uvcCameraHandler.isEqual(device)) {
             uvcCameraHandler.close();
         }
     }
-
 
     public boolean isOpened() {
         return uvcCameraHandler != null && uvcCameraHandler.isOpened();

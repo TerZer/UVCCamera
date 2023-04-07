@@ -24,7 +24,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion versionCompiler
+    compileSdk versionCompiler
 
     compileOptions {
         sourceCompatibility javaSourceCompatibility
@@ -43,12 +43,17 @@ android {
         }
     }
     namespace 'com.serenegiant.usbcameracommon'
+    ndkVersion '25.1.8937393'
 
 }
 
 dependencies {
+    def lifecycle_version = "2.5.1"
     implementation fileTree(dir: new File(buildDir, 'libs'), include: ['*.jar'])
     implementation project(':libuvccamera')
     implementation 'androidx.annotation:annotation:1.5.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
+
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
 }

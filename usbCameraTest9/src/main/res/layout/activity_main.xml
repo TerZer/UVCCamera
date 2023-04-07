@@ -29,6 +29,28 @@
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame">
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btnConnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="connect" />
+
+        <Button
+            android:id="@+id/btnDisconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="disconnect" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <FrameLayout
         android:layout_width="640dp"
@@ -44,7 +66,6 @@
             android:id="@+id/face_rect_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </FrameLayout>
 
     <ImageView

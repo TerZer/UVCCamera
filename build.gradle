@@ -18,7 +18,6 @@ allprojects {
             dirs project(':libuvccamera').file('src/main/libs')
         }
     }
-
 }
 
 task clean(type: Delete) {
