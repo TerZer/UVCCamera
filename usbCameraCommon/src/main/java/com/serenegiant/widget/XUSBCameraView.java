@@ -1,7 +1,6 @@
 package com.serenegiant.widget;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
@@ -10,12 +9,11 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Lifecycle;
 
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
@@ -29,7 +27,7 @@ import com.serenegiant.usbcameracommon.UVCCameraHandler;
 
 import java.nio.ByteBuffer;
 
-public class XUSBCameraView extends LinearLayout {
+public class XUSBCameraView extends FrameLayout {
     private static final String TAG = "XCameraView";
     private UVCCameraHandler uvcCameraHandler;
     private UVCCameraTextureView mUVCCameraView;
@@ -95,6 +93,11 @@ public class XUSBCameraView extends LinearLayout {
 
     public void setAspectRatio(final double aspectRatio) {
         mUVCCameraView.setAspectRatio(aspectRatio);
+    }
+
+
+    public void setSurfaceCallback(CameraViewInterface.SurfaceCallback callback) {
+        mUVCCameraView.setSurfaceCallback(callback);
     }
 
     public boolean autoOpen() {
@@ -211,6 +214,20 @@ public class XUSBCameraView extends LinearLayout {
         }
     }
 
+    public void connect() {
+        if (ownerActivity == null) {
+            Log.e(TAG, "connect() called with fail,ownerActivity is null");
+            return;
+        }
+
+        if (ctrlBlock == null) {
+            Log.e(TAG, "connect() called with fail,ctrlBlock is null");
+            return;
+        }
+
+
+    }
+
     public void connect(USBMonitor.UsbControlBlock ctrlBlock, Activity ownerActivity) {
         this.ownerActivity = ownerActivity;
         createHandler();
@@ -286,7 +303,9 @@ public class XUSBCameraView extends LinearLayout {
     }
 
     public void close() {
-        uvcCameraHandler.close();
+        if (uvcCameraHandler != null) {
+            uvcCameraHandler.close();
+        }
     }
 
 

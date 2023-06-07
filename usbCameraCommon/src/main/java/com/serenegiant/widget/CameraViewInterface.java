@@ -30,7 +30,7 @@ import android.view.Surface;
 import com.serenegiant.encoder.IVideoEncoder;
 
 public interface CameraViewInterface extends IAspectRatioView {
-    interface Callback {
+    public static interface SurfaceCallback {
         void onSurfaceCreated(CameraViewInterface view, Surface surface);
 
         void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height);
@@ -42,7 +42,7 @@ public interface CameraViewInterface extends IAspectRatioView {
 
     void onResume();
 
-    void setCallback(Callback callback);
+    void setSurfaceCallback(SurfaceCallback callback);
 
     SurfaceTexture getSurfaceTexture();
 

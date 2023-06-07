@@ -40,7 +40,7 @@ public class AspectRatioTextureView extends TextureView	// API >= 14
 	private static final String TAG = "AbstractCameraView";
 
     private double mRequestedAspect = -1.0;
-	private CameraViewInterface.Callback mCallback;
+	private CameraViewInterface.SurfaceCallback mCallback;
 
 	public AspectRatioTextureView(final Context context) {
 		this(context, null, 0);

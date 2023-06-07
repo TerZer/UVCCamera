@@ -60,7 +60,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
     private final Object mCaptureSync = new Object();
     private Bitmap mTempBitmap;
     private boolean mReqesutCaptureStillImage;
-    private Callback mCallback;
+    private SurfaceCallback surfaceCallback;
     /**
      * for calculation of frame rate
      */
@@ -113,8 +113,8 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
             mRenderHandler.resize(width, height);
         }
         mHasSurface = true;
-        if (mCallback != null) {
-            mCallback.onSurfaceCreated(this, getSurface());
+        if (surfaceCallback != null) {
+            surfaceCallback.onSurfaceCreated(this, getSurface());
         }
     }
 
@@ -124,8 +124,8 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
         if (mRenderHandler != null) {
             mRenderHandler.resize(width, height);
         }
-        if (mCallback != null) {
-            mCallback.onSurfaceChanged(this, getSurface(), width, height);
+        if (surfaceCallback != null) {
+            surfaceCallback.onSurfaceChanged(this, getSurface(), width, height);
         }
     }
 
@@ -137,8 +137,8 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
             mRenderHandler = null;
         }
         mHasSurface = false;
-        if (mCallback != null) {
-            mCallback.onSurfaceDestroy(this, getSurface());
+        if (surfaceCallback != null) {
+            surfaceCallback.onSurfaceDestroy(this, getSurface());
         }
         if (mPreviewSurface != null) {
             mPreviewSurface.release();
@@ -217,8 +217,8 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
     }
 
     @Override
-    public void setCallback(final Callback callback) {
-        mCallback = callback;
+    public void setSurfaceCallback(final SurfaceCallback callback) {
+        surfaceCallback = callback;
     }
 
     public void resetFps() {
