@@ -23,9 +23,11 @@
 
 package com.serenegiant.usbcameratest9;
 
+import android.content.DialogInterface;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -51,7 +53,7 @@ public final class AutoOpenActivity extends AppCompatActivity {
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
             Log.d(TAG, "onConnect() called with: device = [" + device + "], ctrlBlock = [" + ctrlBlock + "], createNew = [" + createNew + "]");
             AutoOpenActivity.this.ctrlBlock = ctrlBlock;
-            connectUSBCamera();
+            connect(null);
         }
 
         @Override
@@ -76,7 +78,7 @@ public final class AutoOpenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_auto_link);
         cameraView = findViewById(R.id.xcamera_view);
         cameraView.getCaptureButton().setOnClickListener(v -> {
             cameraView.capture("/sdcard/text.png", (p) -> {
@@ -93,7 +95,7 @@ public final class AutoOpenActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "---------onStart() called----------");
         cameraView.postDelayed(() -> {
-            mUSBMonitor.addDeviceFilter(new DeviceFilter("Gkuvision Corp.",""));
+            mUSBMonitor.addDeviceFilter(new DeviceFilter("Gkuvision Corp.", ""));
             mUSBMonitor.register();
         }, 1000);
 
@@ -104,13 +106,13 @@ public final class AutoOpenActivity extends AppCompatActivity {
             //detect(frame, w, h);
         });
 
-        findViewById(R.id.btnConnect).setOnClickListener(v -> {
-            connectUSBCamera();
+        cameraView.setOnClickListener(v -> {
+            cameraView.close();
+            USBCameraDialog dialog = new USBCameraDialog(AutoOpenActivity.this);
+            dialog.open(ctrlBlock,AutoOpenActivity.this);
+            dialog.setOnDismissListener(dialog1 -> cameraView.connect());
         });
 
-        findViewById(R.id.btnDisconnect).setOnClickListener(v -> {
-
-        });
     }
 
 
@@ -122,8 +124,32 @@ public final class AutoOpenActivity extends AppCompatActivity {
     }
 
 
-    private void connectUSBCamera() {
+    public void connect(View v) {
         if (ctrlBlock == null) return;
+        if (cameraView.getCtrlBlock() != null) {
+            cameraView.connect();
+            return;
+        }
         cameraView.connect(ctrlBlock, AutoOpenActivity.this);
+    }
+
+    public void onStartClick(View view) {
+        cameraView.start();
+    }
+
+    public void onCloseClick(View view) {
+        cameraView.close();
+    }
+
+    public void onStopClick(View view) {
+        cameraView.stop();
+    }
+
+    public void onPauseClick(View view) {
+        cameraView.pause();
+    }
+
+    public void onResumeClick(View view) {
+        cameraView.resume();
     }
 }

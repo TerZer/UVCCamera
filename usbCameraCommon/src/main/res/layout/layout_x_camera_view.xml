@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_gravity="center" />
 
     <ImageView
         android:id="@+id/x_iv_frame_image"
@@ -30,6 +31,7 @@
         android:layout_alignTop="@+id/x_camera_view"
         android:layout_alignRight="@+id/x_camera_view"
         android:layout_alignBottom="@+id/x_camera_view"
+        android:layout_gravity="end"
         android:visibility="gone" />
 
     <ImageButton
@@ -38,6 +40,7 @@
         android:layout_height="@dimen/button_size"
         android:layout_alignBottom="@id/x_camera_view"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="end|bottom"
         android:layout_marginBottom="6dp"
         android:background="@null"
         android:scaleType="centerCrop"

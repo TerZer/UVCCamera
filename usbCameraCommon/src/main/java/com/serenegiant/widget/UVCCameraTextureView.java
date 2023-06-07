@@ -49,12 +49,12 @@ import com.serenegiant.utils.FpsCounter;
  * you can show this view in the center of screen and keep the aspect ratio of content
  * XXX it is better that can set the aspect ratio as xml property
  */
-public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
-        implements TextureView.SurfaceTextureListener, CameraViewInterface {
+public class UVCCameraTextureView extends AspectRatioTextureView implements TextureView.SurfaceTextureListener, CameraViewInterface {
+
     private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "UVCCameraTextureView";
     private String name = "";
-
+    private SurfaceTexture surface;
     private boolean mHasSurface;
     private RenderHandler mRenderHandler;
     private final Object mCaptureSync = new Object();
@@ -86,8 +86,12 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
     @Override
     public void onResume() {
         if (DEBUG) Log.v(TAG, "onResume:");
+        if (surface == null) {
+            if (DEBUG) Log.v(TAG, "onResume:fail,surface is null");
+            return;
+        }
         if (mHasSurface) {
-            mRenderHandler = RenderHandler.createHandler(mFpsCounter, super.getSurfaceTexture(), getWidth(), getHeight());
+            mRenderHandler = RenderHandler.createHandler(mFpsCounter, surface, getWidth(), getHeight());
         }
     }
 
@@ -106,6 +110,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
 
     @Override
     public void onSurfaceTextureAvailable(final SurfaceTexture surface, final int width, final int height) {
+        this.surface = surface;
         if (DEBUG) Log.v(TAG, "onSurfaceTextureAvailable:" + surface);
         if (mRenderHandler == null) {
             mRenderHandler = RenderHandler.createHandler(mFpsCounter, surface, width, height);
@@ -131,6 +136,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
 
     @Override
     public boolean onSurfaceTextureDestroyed(final SurfaceTexture surface) {
+        this.surface = null;
         if (DEBUG) Log.v(TAG, "onSurfaceTextureDestroyed:" + surface);
         if (mRenderHandler != null) {
             mRenderHandler.release();
@@ -268,9 +274,8 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
         private boolean mIsActive = true;
         private final FpsCounter mFpsCounter;
 
-        public static final RenderHandler createHandler(final FpsCounter counter,
-                                                        final SurfaceTexture surface, final int width, final int height) {
-
+        public static RenderHandler createHandler(final FpsCounter counter, final SurfaceTexture surface, final int width, final int height) {
+            Log.d(TAG, "createHandler() called with: counter = [" + counter + "], surface = [" + surface + "], width = [" + width + "], height = [" + height + "]");
             final RenderThread thread = new RenderThread(counter, surface, width, height);
             thread.start();
             return thread.getHandler();
@@ -316,7 +321,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
             }
         }
 
-        public final void release() {
+        public void release() {
             if (DEBUG) Log.v(TAG, "release:");
             if (mIsActive) {
                 mIsActive = false;
@@ -351,7 +356,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                     mThread.resize(msg.arg1, msg.arg2);
                     break;
                 case MSG_TERMINATE:
-                    Looper.myLooper().quit();
+                    Looper.myLooper().quitSafely();
                     mThread = null;
                     break;
                 default:
@@ -392,7 +397,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                 setName("RenderThread");
             }
 
-            public final RenderHandler getHandler() {
+            public RenderHandler getHandler() {
                 if (DEBUG) Log.v(TAG, "RenderThread#getHandler:");
                 synchronized (mSync) {
                     // create rendering thread
@@ -400,6 +405,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                         try {
                             mSync.wait();
                         } catch (final InterruptedException e) {
+                            e.printStackTrace();
                         }
                 }
                 return mHandler;
@@ -560,18 +566,16 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
 			} */
 
             @Override
-            public final void run() {
-                Log.d(TAG, getName() + " started");
+            public void run() {
+                Log.d(TAG, getName() + "--------- started----------");
                 init();
                 Looper.prepare();
                 synchronized (mSync) {
                     mHandler = new RenderHandler(mFpsCounter, this);
                     mSync.notify();
                 }
-
                 Looper.loop();
-
-                Log.d(TAG, getName() + " finishing");
+                Log.d(TAG, getName() + " --------finishing---------");
                 release();
                 synchronized (mSync) {
                     mHandler = null;
@@ -579,7 +583,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                 }
             }
 
-            private final void init() {
+            private void init() {
                 if (DEBUG) Log.v(TAG, "RenderThread#init:");
                 // create EGLContext for this thread
                 mEgl = EGLBase.createFrom(null, false, false);
@@ -589,7 +593,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                 mDrawer = new GLDrawer2D(true);
             }
 
-            private final void release() {
+            private void release() {
                 if (DEBUG) Log.v(TAG, "RenderThread#release:");
                 if (mDrawer != null) {
                     mDrawer.release();

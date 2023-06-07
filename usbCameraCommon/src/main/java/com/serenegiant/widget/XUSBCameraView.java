@@ -7,11 +7,9 @@ import android.hardware.usb.UsbDevice;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
@@ -224,8 +222,7 @@ public class XUSBCameraView extends FrameLayout {
             Log.e(TAG, "connect() called with fail,ctrlBlock is null");
             return;
         }
-
-
+        connect(ctrlBlock, ownerActivity);
     }
 
     public void connect(USBMonitor.UsbControlBlock ctrlBlock, Activity ownerActivity) {
@@ -273,12 +270,23 @@ public class XUSBCameraView extends FrameLayout {
         uvcCameraHandler.captureStill(path);
     }
 
-    public void start(SurfaceHolder holder) {
+
+    public void start(Object holder) {
         Log.d(TAG, "start() called with: holder = [" + holder + "]");
-        if (uvcCameraHandler == null) {
+        if (holder == null) {
             return;
         }
         uvcCameraHandler.startPreview(holder);
+    }
+
+
+    public void start() {
+        Surface holder = mUVCCameraView.getSurface();
+        if (holder == null) {
+            Log.e(TAG, "start() called fail,holder is noll");
+            return;
+        }
+        start(holder);
     }
 
     public void resume() {
@@ -315,7 +323,14 @@ public class XUSBCameraView extends FrameLayout {
             uvcCameraHandler.release();
             uvcCameraHandler = null;
         }
-        mUVCCameraView.onPause();
-        mUVCCameraView = null;
+
+        if (mUVCCameraView != null) {
+            mUVCCameraView.onPause();
+            mUVCCameraView = null;
+        }
+        ownerActivity = null;
+        cameraCallback = null;
+        frameCallback = null;
+        captureStillListener = null;
     }
 }

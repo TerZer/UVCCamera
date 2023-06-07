@@ -130,14 +130,6 @@ public final class MainActivity extends AppCompatActivity implements SeetaContra
         cameraView.setFrameCallback((frame, w, h) -> {
             //detect(frame, w, h);
         });
-
-        findViewById(R.id.btnConnect).setOnClickListener(v -> {
-            connectUSBCamera();
-        });
-
-        findViewById(R.id.btnDisconnect).setOnClickListener(v -> {
-
-        });
     }
 
 
