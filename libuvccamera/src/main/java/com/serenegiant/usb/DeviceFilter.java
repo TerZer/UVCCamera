@@ -355,12 +355,14 @@ public final class DeviceFilter {
         if (mVendorId != -1 && device.getVendorId() != mVendorId) {
             return false;
         }
+
         if (mProductId != -1 && device.getProductId() != mProductId) {
             return false;
         }
 
-        if (!TextUtils.isEmpty(mManufacturerName) && !TextUtils.isEmpty(device.getManufacturerName()))
+        if (!TextUtils.isEmpty(mManufacturerName) && !TextUtils.isEmpty(device.getManufacturerName())) {
             return Objects.equals(mManufacturerName, device.getManufacturerName());
+        }
 
         if (!TextUtils.isEmpty(mProductName) && !TextUtils.isEmpty(device.getProductName()))
             return Objects.equals(mProductName, device.getProductName());

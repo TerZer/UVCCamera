@@ -319,20 +319,19 @@ public final class USBMonitor {
     public List<UsbDevice> getDeviceList(final List<DeviceFilter> filters) throws IllegalStateException {
         if (destroyed) throw new IllegalStateException("already destroyed");
         final HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-        final List<UsbDevice> result = new ArrayList<UsbDevice>();
+        final List<UsbDevice> result = new ArrayList<>();
         if (deviceList == null) return result;
         if ((filters == null) || filters.isEmpty()) {
             result.addAll(deviceList.values());
-        } else {
-            for (final UsbDevice device : deviceList.values()) {
-                for (final DeviceFilter filter : filters) {
-                    if ((filter != null) && filter.matches(device)) {
-                        // when filter matches
-                        if (!filter.isExclude) {
-                            result.add(device);
-                        }
-                        break;
-                    }
+            return result;
+        }
+
+        for (final UsbDevice device : deviceList.values()) {
+            for (final DeviceFilter filter : filters) {
+                if ((filter != null) && filter.matches(device) && !filter.isExclude) {
+                    // when filter matches
+                    result.add(device);
+                    break;
                 }
             }
         }

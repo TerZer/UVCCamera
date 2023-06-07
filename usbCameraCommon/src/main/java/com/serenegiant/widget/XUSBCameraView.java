@@ -58,17 +58,17 @@ public class XUSBCameraView extends LinearLayout {
 
     {
         View.inflate(getContext(), R.layout.layout_x_camera_view, this);
-        mCaptureButton = findViewById(R.id.btn_capture_button);
+        mCaptureButton = findViewById(R.id.x_btn_capture_button);
         if (BuildConfig.DEBUG) {
             // mCaptureButton.setVisibility(View.INVISIBLE);
         }
-        mUVCCameraView = findViewById(R.id.camera_view);
+        mUVCCameraView = findViewById(R.id.x_camera_view);
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
     }
 
     public ImageButton getCaptureButton() {
         if (mCaptureButton == null) {
-            mCaptureButton = findViewById(R.id.btn_capture_button);
+            mCaptureButton = findViewById(R.id.x_btn_capture_button);
         }
         return mCaptureButton;
     }
@@ -98,10 +98,7 @@ public class XUSBCameraView extends LinearLayout {
     }
 
     public boolean autoOpen() {
-        if (ownerActivity == null) return false;
-
-
-        return true;
+        return ownerActivity != null;
     }
 
 
@@ -285,8 +282,11 @@ public class XUSBCameraView extends LinearLayout {
         Log.d(TAG, "stop() called");
         if (uvcCameraHandler != null) {
             uvcCameraHandler.stopPreview();
-            uvcCameraHandler.close();
         }
+    }
+
+    public void close() {
+        uvcCameraHandler.close();
     }
 
 

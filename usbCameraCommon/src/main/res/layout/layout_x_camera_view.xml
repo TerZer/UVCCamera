@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_device_id"
+        android:id="@+id/x_tv_device_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
@@ -16,27 +16,27 @@
         tools:text="test" />
 
     <com.serenegiant.widget.UVCCameraTextureView
-        android:id="@+id/camera_view"
+        android:id="@+id/x_camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
     <ImageView
-        android:id="@+id/iv_frame_image"
+        android:id="@+id/x_iv_frame_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/camera_view"
-        android:layout_alignTop="@+id/camera_view"
-        android:layout_alignRight="@+id/camera_view"
-        android:layout_alignBottom="@+id/camera_view"
+        android:layout_alignLeft="@+id/x_camera_view"
+        android:layout_alignTop="@+id/x_camera_view"
+        android:layout_alignRight="@+id/x_camera_view"
+        android:layout_alignBottom="@+id/x_camera_view"
         android:visibility="gone" />
 
     <ImageButton
-        android:id="@+id/btn_capture_button"
+        android:id="@+id/x_btn_capture_button"
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
-        android:layout_alignBottom="@id/camera_view"
+        android:layout_alignBottom="@id/x_camera_view"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="6dp"
         android:background="@null"
