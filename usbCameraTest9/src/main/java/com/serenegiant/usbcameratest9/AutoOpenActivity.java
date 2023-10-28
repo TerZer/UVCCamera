@@ -97,7 +97,7 @@ public final class AutoOpenActivity extends AppCompatActivity {
         cameraView.postDelayed(() -> {
             mUSBMonitor.addDeviceFilter(new DeviceFilter("Gkuvision Corp.", ""));
             mUSBMonitor.register();
-        }, 1000);
+        }, 600);
 
     }
 

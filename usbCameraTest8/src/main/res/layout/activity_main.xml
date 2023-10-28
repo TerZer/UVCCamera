@@ -46,7 +46,7 @@
 		android:layout_alignLeft="@+id/camera_view"
 		android:layout_alignRight="@+id/camera_view"
 		android:layout_alignTop="@+id/camera_view"
-		android:src="@drawable/border"/>
+		/>
 
 	<ToggleButton
 		android:id="@+id/camera_button"

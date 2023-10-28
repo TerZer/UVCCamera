@@ -28,5 +28,4 @@
     <uses-feature android:name="android.hardware.usb.host" />
     <uses-permission android:name="android.hardware.usb.host" />
 
-
 </manifest>
