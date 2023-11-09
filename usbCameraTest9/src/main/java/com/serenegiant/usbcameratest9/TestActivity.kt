@@ -5,6 +5,7 @@ import android.hardware.usb.UsbDevice
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.serenegiant.DefOnDeviceConnectListener
 import com.serenegiant.USBMonitorManager
 import com.serenegiant.usb.USBMonitor
 
@@ -20,6 +21,7 @@ class TestActivity : AppCompatActivity() {
     }
 
     fun onOpenInDialog(view: View?) {
+
         USBMonitorManager.addListener(object : USBMonitor.OnDeviceConnectListener {
             override fun onAttach(device: UsbDevice?) {
             }
