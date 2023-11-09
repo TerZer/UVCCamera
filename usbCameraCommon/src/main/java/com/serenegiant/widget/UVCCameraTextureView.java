@@ -54,13 +54,14 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
     private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "UVCCameraTextureView";
     private String name = "";
-    private SurfaceTexture surface;
+    private SurfaceTexture texture;
     private boolean mHasSurface;
     private RenderHandler mRenderHandler;
     private final Object mCaptureSync = new Object();
     private Bitmap mTempBitmap;
     private boolean mReqesutCaptureStillImage;
     private SurfaceCallback surfaceCallback;
+    private Surface mPreviewSurface;
     /**
      * for calculation of frame rate
      */
@@ -76,6 +77,10 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
     public UVCCameraTextureView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    {
+      //  Log.d(TAG, "UVCCameraTextureView() called with: " + hashCode());
         setSurfaceTextureListener(this);
     }
 
@@ -86,40 +91,58 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
     @Override
     public void onResume() {
         if (DEBUG) Log.v(TAG, "onResume:");
-        if (surface == null) {
-            if (DEBUG) Log.v(TAG, "onResume:fail,surface is null");
-            return;
-        }
-        if (mHasSurface) {
-            mRenderHandler = RenderHandler.createHandler(mFpsCounter, surface, getWidth(), getHeight());
-        }
+        initRenderHandler(getWidth(), getHeight());
     }
 
     @Override
     public void onPause() {
-        if (DEBUG) Log.v(TAG, "onPause:");
-        if (mRenderHandler != null) {
-            mRenderHandler.release();
-            mRenderHandler = null;
-        }
+        if (DEBUG) Log.w(TAG, "onPause:");
+        releaseRenderHandler();
+
         if (mTempBitmap != null) {
             mTempBitmap.recycle();
             mTempBitmap = null;
         }
     }
 
+
+    private void initRenderHandler(final int width, final int height) {
+        if (DEBUG)
+            Log.d(TAG, "initRenderHandler() called with: width = [" + width + "], height = [" + height + "]");
+        if (texture == null) {
+            if (DEBUG) Log.v(TAG, "onResume:fail,surface is null");
+            return;
+        }
+        if (mHasSurface) {
+            if (mRenderHandler == null) {
+                mRenderHandler = RenderHandler.createHandler(mFpsCounter, texture, width, height);
+            } else {
+                mRenderHandler.resize(width, height);
+            }
+        } else {
+            Log.e(TAG, "initRenderHandler() called with  mHasSurface=false");
+        }
+    }
+
+    private void releaseRenderHandler() {
+        if (DEBUG) Log.w(TAG, "releaseRenderHandler() called");
+        if (mRenderHandler != null) {
+            mRenderHandler.release();
+            mRenderHandler = null;
+        }
+    }
+
+
     @Override
     public void onSurfaceTextureAvailable(final SurfaceTexture surface, final int width, final int height) {
-        this.surface = surface;
-        if (DEBUG) Log.v(TAG, "onSurfaceTextureAvailable:" + surface);
-        if (mRenderHandler == null) {
-            mRenderHandler = RenderHandler.createHandler(mFpsCounter, surface, width, height);
-        } else {
-            mRenderHandler.resize(width, height);
-        }
+        if (DEBUG)
+            Log.d(TAG, "onSurfaceTextureAvailable() called with: surface = [" + surface + "], width = [" + width + "], height = [" + height + "],HasSurface=" + mHasSurface);
+
+        this.texture = surface;
         mHasSurface = true;
+        initRenderHandler(width, height);
         if (surfaceCallback != null) {
-            surfaceCallback.onSurfaceCreated(this, getSurface());
+            surfaceCallback.onSurfaceCreated(this, getTexture());
         }
     }
 
@@ -130,21 +153,18 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
             mRenderHandler.resize(width, height);
         }
         if (surfaceCallback != null) {
-            surfaceCallback.onSurfaceChanged(this, getSurface(), width, height);
+            surfaceCallback.onSurfaceChanged(this, getTexture(), width, height);
         }
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(final SurfaceTexture surface) {
-        this.surface = null;
+        this.texture = null;
         if (DEBUG) Log.v(TAG, "onSurfaceTextureDestroyed:" + surface);
-        if (mRenderHandler != null) {
-            mRenderHandler.release();
-            mRenderHandler = null;
-        }
+        releaseRenderHandler();
         mHasSurface = false;
         if (surfaceCallback != null) {
-            surfaceCallback.onSurfaceDestroy(this, getSurface());
+            surfaceCallback.onSurfaceDestroy(this, getTexture());
         }
         if (mPreviewSurface != null) {
             mPreviewSurface.release();
@@ -155,17 +175,11 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
     @Override
     public void onSurfaceTextureUpdated(final SurfaceTexture surface) {
-/*
-        if (DEBUG)
-            Log.d(TAG, name + "---->onSurfaceTextureUpdated() called with: surface = [" + surface + "]");
-*/
         synchronized (mCaptureSync) {
             if (mReqesutCaptureStillImage) {
                 mReqesutCaptureStillImage = false;
-                if (mTempBitmap == null)
-                    mTempBitmap = getBitmap();
-                else
-                    getBitmap(mTempBitmap);
+                if (mTempBitmap == null) mTempBitmap = getBitmap();
+                else getBitmap(mTempBitmap);
                 mCaptureSync.notifyAll();
             }
         }
@@ -199,13 +213,17 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
     @Override
     public SurfaceTexture getSurfaceTexture() {
+        if (mRenderHandler == null) {
+            Log.e(TAG, "getSurfaceTexture() called with  mRenderHandler is null ,hasSurface=" + mHasSurface);
+        } else {
+            Log.d(TAG, "getSurfaceTexture() called");
+        }
         return mRenderHandler != null ? mRenderHandler.getPreviewTexture() : null;
     }
 
-    private Surface mPreviewSurface;
 
     @Override
-    public Surface getSurface() {
+    public Surface getTexture() {
         if (DEBUG) Log.v(TAG, "getSurface:hasSurface=" + mHasSurface);
         if (mPreviewSurface == null) {
             final SurfaceTexture st = getSurfaceTexture();
@@ -218,8 +236,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
     @Override
     public void setVideoEncoder(final IVideoEncoder encoder) {
-        if (mRenderHandler != null)
-            mRenderHandler.setVideoEncoder(encoder);
+        if (mRenderHandler != null) mRenderHandler.setVideoEncoder(encoder);
     }
 
     @Override
@@ -261,8 +278,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
      *
      * @author saki
      */
-    private static final class RenderHandler extends Handler
-            implements SurfaceTexture.OnFrameAvailableListener {
+    private static final class RenderHandler extends Handler implements SurfaceTexture.OnFrameAvailableListener {
 
         private static final int MSG_REQUEST_RENDER = 1;
         private static final int MSG_SET_ENCODER = 2;
@@ -288,12 +304,11 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
         public final void setVideoEncoder(final IVideoEncoder encoder) {
             if (DEBUG) Log.v(TAG, "setVideoEncoder:");
-            if (mIsActive)
-                sendMessage(obtainMessage(MSG_SET_ENCODER, encoder));
+            if (mIsActive) sendMessage(obtainMessage(MSG_SET_ENCODER, encoder));
         }
 
         public final SurfaceTexture getPreviewTexture() {
-            if (DEBUG) Log.v(TAG, "getPreviewTexture:");
+            if (DEBUG) Log.v(TAG, "getPreviewTexture:mIsActive=" + mIsActive);
             if (mIsActive) {
                 synchronized (mThread.mSync) {
                     sendEmptyMessage(MSG_CREATE_SURFACE);
@@ -401,12 +416,11 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
                 if (DEBUG) Log.v(TAG, "RenderThread#getHandler:");
                 synchronized (mSync) {
                     // create rendering thread
-                    if (mHandler == null)
-                        try {
-                            mSync.wait();
-                        } catch (final InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    if (mHandler == null) try {
+                        mSync.wait();
+                    } catch (final InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return mHandler;
             }
@@ -485,8 +499,7 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
                     // notify to capturing thread that the camera frame is available.
                     if (mEncoder instanceof MediaVideoEncoder)
                         ((MediaVideoEncoder) mEncoder).frameAvailableSoon(mStMatrix);
-                    else
-                        mEncoder.frameAvailableSoon();
+                    else mEncoder.frameAvailableSoon();
                 }
                 // draw to preview screen
                 mDrawer.draw(mTexId, mStMatrix, 0);

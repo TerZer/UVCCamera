@@ -9,10 +9,20 @@
     android:padding="3dp">
 
     <com.serenegiant.widget.XUSBCameraView
-        android:background="@color/colorAccent"
         android:id="@+id/xcv"
         android:layout_width="640dp"
         android:layout_height="480dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@color/colorAccent" />
+
+
+
+    <Button
+        android:id="@+id/btnCloseDialog"
+        android:text="close"
+        android:layout_marginBottom="12dp"
+        android:layout_gravity="center|bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

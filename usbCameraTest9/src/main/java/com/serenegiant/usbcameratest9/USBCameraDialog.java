@@ -3,6 +3,7 @@ package com.serenegiant.usbcameratest9;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +13,7 @@ import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.widget.XUSBCameraView;
 
 public class USBCameraDialog extends AppCompatDialog {
-
+    private static final String TAG = "USBCameraDialog";
     public USBCameraDialog(@NonNull Context context) {
         super(context);
     }
@@ -26,20 +27,21 @@ public class USBCameraDialog extends AppCompatDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_usb_camera);
         xusbCameraView = findViewById(R.id.xcv);
+        findViewById(R.id.btnCloseDialog).setOnClickListener(v -> dismiss());
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart() called");
         xusbCameraView.postDelayed(() -> {
-            xusbCameraView.setOwnerActivity(activity);
-            xusbCameraView.connect(controlBlock);
-        }, 900);
+            xusbCameraView.connect(controlBlock, activity);
+        }, 100);
     }
 
     public void open(USBMonitor.UsbControlBlock controlBlock, Activity activity) {
-        this.activity=activity;
-        this.controlBlock=controlBlock;
+        this.activity = activity;
+        this.controlBlock = controlBlock;
         if (!isShowing()) show();
 
     }
@@ -47,6 +49,6 @@ public class USBCameraDialog extends AppCompatDialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        xusbCameraView.close();
+        xusbCameraView.release();
     }
 }

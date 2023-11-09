@@ -55,9 +55,6 @@ public class XUSBCameraView extends FrameLayout {
     {
         View.inflate(getContext(), R.layout.layout_x_camera_view, this);
         mCaptureButton = findViewById(R.id.x_btn_capture_button);
-        if (BuildConfig.DEBUG) {
-            // mCaptureButton.setVisibility(View.INVISIBLE);
-        }
         mUVCCameraView = findViewById(R.id.x_camera_view);
         mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
     }
@@ -231,12 +228,15 @@ public class XUSBCameraView extends FrameLayout {
         connect(ctrlBlock, uvcCameraHandler, mUVCCameraView);
     }
 
+
     public void connect(USBMonitor.UsbControlBlock ctrlBlock) {
         createHandler();
         connect(ctrlBlock, uvcCameraHandler, mUVCCameraView);
     }
 
     private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface) {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock + "], handler = [" + handler + "], cameraViewInterface = [" + cameraViewInterface + "]");
         if (handler == null) {
             Log.e(TAG, "connect() called with fail,cause handler is null");
             return;
@@ -281,7 +281,8 @@ public class XUSBCameraView extends FrameLayout {
 
 
     public void start() {
-        Surface holder = mUVCCameraView.getSurface();
+        Log.d(TAG, "start() called");
+        Surface holder = mUVCCameraView.getTexture();
         if (holder == null) {
             Log.e(TAG, "start() called fail,holder is noll");
             return;
@@ -315,7 +316,6 @@ public class XUSBCameraView extends FrameLayout {
             uvcCameraHandler.close();
         }
     }
-
 
     public void release() {
         Log.d(TAG, "release() called");
