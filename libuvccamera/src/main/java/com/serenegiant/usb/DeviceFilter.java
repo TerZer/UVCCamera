@@ -70,6 +70,13 @@ public final class DeviceFilter {
         this(-1, -1, -1, -1, -1, manufacturer, product, null, false);
     }
 
+
+    public DeviceFilter(final String manufacturer) {
+        this(-1, -1, -1, -1, -1, manufacturer, null, null, false);
+    }
+
+
+
     public DeviceFilter(final int vid, final int pid, final int clasz, final int subclass, final int protocol, final String manufacturer, final String product, final String serialNum, final boolean isExclude) {
         mVendorId = vid;
         mProductId = pid;
@@ -83,6 +90,7 @@ public final class DeviceFilter {
 /*		Log.i(TAG, String.format("vendorId=0x%04x,productId=0x%04x,class=0x%02x,subclass=0x%02x,protocol=0x%02x",
 			mVendorId, mProductId, mClass, mSubclass, mProtocol)); */
     }
+
 
     public DeviceFilter(final UsbDevice device) {
         this(device, false);

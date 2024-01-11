@@ -23,7 +23,6 @@
 
 package com.serenegiant.usbcameratest9;
 
-import android.content.DialogInterface;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +30,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.df.lib_seete6.utils.EnginHelper;
 import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.widget.XUSBCameraView;

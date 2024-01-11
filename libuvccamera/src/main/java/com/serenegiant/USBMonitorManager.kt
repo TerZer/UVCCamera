@@ -30,33 +30,35 @@ object USBMonitorManager {
     }
 
     fun rmAllListener() {
+        if (isPrintLog)
+            Log.d(TAG, "rmAllListener() called")
         listenerList.clear()
     }
 
     fun requestPermission(device: UsbDevice? = attachedDevice) {
         if (device == null) return
+        if (isPrintLog)
+            Log.d(TAG, "requestPermission() called with: device = ${device.deviceName}")
         mUSBMonitor?.requestPermission(device)
     }
 
 
     fun register(ct: Context, filters: List<DeviceFilter>? = null) {
-        if (isRegistered) return
+        if (isPrintLog) Log.d(
+            TAG,
+            "register() called with: ct = ${ct.javaClass.simpleName}, filters = $filters"
+        )
+
         val mOnDeviceConnectListener: USBMonitor.OnDeviceConnectListener =
             object : USBMonitor.OnDeviceConnectListener {
                 override fun onAttach(device: UsbDevice) {
-                    if (isPrintLog) {
-                        Log.d(TAG, "onAttach() called with: device = $device")
-
-                    }
-
+                    if (isPrintLog) Log.d(TAG, "onAttach() called with: device = $device")
                     attachedDevice = device
                     listenerList.forEach { it.onAttach(device) }
                 }
 
                 override fun onDetach(device: UsbDevice) {
-                    if (isPrintLog) {
-                        Log.d(TAG, "onDetach() called with: device = $device")
-                    }
+                    if (isPrintLog) Log.d(TAG, "onDetach() called with: device = $device")
                     attachedDevice = null
                     listenerList.forEach { it.onDetach(device) }
                 }
@@ -69,7 +71,6 @@ object USBMonitorManager {
                             TAG,
                             "onConnect() called with: device = $device, ctrlBlock = $ctrlBlock, createNew = $createNew"
                         )
-
                     }
                     listenerList.forEach { it.onConnect(device, ctrlBlock, createNew) }
                 }
@@ -103,6 +104,7 @@ object USBMonitorManager {
     }
 
     fun unregister() {
+        if (isPrintLog) Log.d(TAG, "unregister() called")
         listenerList.clear()
         mUSBMonitor?.unregister()
         isRegistered = false

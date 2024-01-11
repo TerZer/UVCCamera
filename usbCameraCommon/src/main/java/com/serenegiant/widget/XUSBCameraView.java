@@ -26,15 +26,18 @@ import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import java.nio.ByteBuffer;
 
 public class XUSBCameraView extends FrameLayout {
-    private static final String TAG = "XCameraView";
+    private static final String TAG = "XUSBCameraView";
     private UVCCameraHandler uvcCameraHandler;
-    private UVCCameraTextureView mUVCCameraView;
+    private final UVCCameraTextureView mUVCCameraView;
     private ImageButton mCaptureButton;
     private CameraFrameCallback frameCallback;
     private CameraCallback cameraCallback;
     private CaptureStillListener captureStillListener;
     private USBMonitor.UsbControlBlock ctrlBlock;
     private Activity ownerActivity;
+
+    private int previewHeight = UVCCamera.DEFAULT_PREVIEW_HEIGHT;
+    private int previewWidth = UVCCamera.DEFAULT_PREVIEW_WIDTH;
 
     public XUSBCameraView(Context context) {
         super(context);
@@ -64,6 +67,12 @@ public class XUSBCameraView extends FrameLayout {
             mCaptureButton = findViewById(R.id.x_btn_capture_button);
         }
         return mCaptureButton;
+    }
+
+
+    public void setPreviewSize(int previewWidth, int previewHeight) {
+        this.previewWidth = previewWidth;
+        this.previewHeight = previewHeight;
     }
 
     public void setOwnerActivity(Activity ownerActivity) {
@@ -102,16 +111,15 @@ public class XUSBCameraView extends FrameLayout {
 
     private void createHandler() {
         if (uvcCameraHandler != null) return;
-
         if (ownerActivity == null || ownerActivity.isDestroyed()) {
             Log.e(TAG, "createHandler() fail,cause ownerActivity is null or is Destroyed ");
             return;
         }
-
-        uvcCameraHandler = UVCCameraHandler.createHandler(ownerActivity, mUVCCameraView, UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, 0.5f);
+        uvcCameraHandler = UVCCameraHandler.createHandler(ownerActivity, mUVCCameraView, previewWidth, previewHeight, 0.5f);
         uvcCameraHandler.addCallback(new CameraCallback() {
             @Override
             public void onOpen() {
+                Log.d(TAG, "onOpen() called");
                 prepareCamera();
             }
 
@@ -236,7 +244,7 @@ public class XUSBCameraView extends FrameLayout {
 
     private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface) {
         if (BuildConfig.DEBUG)
-            Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock + "], handler = [" + handler + "], cameraViewInterface = [" + cameraViewInterface + "]");
+            Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock.getInfo() + "], handler = [" + handler.getName() + "]");
         if (handler == null) {
             Log.e(TAG, "connect() called with fail,cause handler is null");
             return;
@@ -319,14 +327,12 @@ public class XUSBCameraView extends FrameLayout {
 
     public void release() {
         Log.d(TAG, "release() called");
+        stop();
+        close();
+
         if (uvcCameraHandler != null) {
             uvcCameraHandler.release();
             uvcCameraHandler = null;
-        }
-
-        if (mUVCCameraView != null) {
-            mUVCCameraView.onPause();
-            mUVCCameraView = null;
         }
         ownerActivity = null;
         cameraCallback = null;

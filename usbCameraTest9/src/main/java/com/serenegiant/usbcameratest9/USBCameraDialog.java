@@ -10,10 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialog;
 
 import com.serenegiant.usb.USBMonitor;
+import com.serenegiant.usbcameracommon.CameraCallback;
 import com.serenegiant.widget.XUSBCameraView;
+
+import java.nio.ByteBuffer;
 
 public class USBCameraDialog extends AppCompatDialog {
     private static final String TAG = "USBCameraDialog";
+
     public USBCameraDialog(@NonNull Context context) {
         super(context);
     }
@@ -27,6 +31,7 @@ public class USBCameraDialog extends AppCompatDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_usb_camera);
         xusbCameraView = findViewById(R.id.xcv);
+        xusbCameraView.setPreviewSize(960,720);
         findViewById(R.id.btnCloseDialog).setOnClickListener(v -> dismiss());
     }
 
@@ -34,6 +39,53 @@ public class USBCameraDialog extends AppCompatDialog {
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
+        xusbCameraView.setCameraCallback(new CameraCallback() {
+            @Override
+            public void onOpen() {
+                Log.d(TAG, "onOpen() called");
+            }
+
+            @Override
+            public void onClose() {
+                Log.d(TAG, "onClose() called");
+
+            }
+
+            @Override
+            public void onStartPreview() {
+                Log.d(TAG, "onStartPreview() called");
+            }
+
+            @Override
+            public void onStopPreview() {
+                Log.d(TAG, "onStopPreview() called");
+            }
+
+            @Override
+            public void onStartRecording() {
+                Log.d(TAG, "onStartRecording() called");
+            }
+
+            @Override
+            public void onStopRecording() {
+                Log.d(TAG, "onStopRecording() called");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.d(TAG, "onError() called with: e = [" + e + "]");
+            }
+
+            @Override
+            public void onFrame(ByteBuffer frame, int w, int h) {
+                Log.d(TAG, "onFrame() called with: frame = [" + frame + "], w = [" + w + "], h = [" + h + "]");
+            }
+
+            @Override
+            public void onCaptureFinish(String path) {
+            }
+        });
+
         xusbCameraView.postDelayed(() -> {
             xusbCameraView.connect(controlBlock, activity);
         }, 100);
@@ -43,7 +95,6 @@ public class USBCameraDialog extends AppCompatDialog {
         this.activity = activity;
         this.controlBlock = controlBlock;
         if (!isShowing()) show();
-
     }
 
     @Override

@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="740dp"
-    android:layout_height="680dp"
+    android:layout_width="960dp"
+    android:layout_height="720dp"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="3dp">
 
     <com.serenegiant.widget.XUSBCameraView
         android:id="@+id/xcv"
-        android:layout_width="640dp"
-        android:layout_height="480dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@color/colorAccent" />
-
-
 
     <Button
         android:id="@+id/btnCloseDialog"

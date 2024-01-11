@@ -7,22 +7,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:padding="20dp"
     android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".TestActivity">
 
     <Button
-        android:onClick="onOpenInDialog"
-        android:layout_margin="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:onClick="onOpenInDialog"
         android:text="Dialog" />
 
     <Button
-        android:onClick="onOpenInActivity"
-        android:layout_margin="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:onClick="onOpenInActivity"
         android:text="Activity" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:onClick="onRegister"
+        android:text="register" />
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

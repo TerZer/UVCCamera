@@ -48,12 +48,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.serenegiant.libuvccamera.BuildConfig;
 import com.serenegiant.utils.BuildCheck;
 import com.serenegiant.utils.HandlerThreadHandler;
 
 public final class USBMonitor {
 
-    private static final boolean DEBUG = false;    // TODO set false on production
+    private static final boolean DEBUG = BuildConfig.DEBUG;    // TODO set false on production
     private static final String TAG = "USBMonitor";
 
     private static final String ACTION_USB_PERMISSION_BASE = "com.serenegiant.USB_PERMISSION.";
@@ -139,7 +140,7 @@ public final class USBMonitor {
      * never reuse again
      */
     public void destroy() {
-        if (DEBUG) Log.i(TAG, "destroy:");
+        if (DEBUG) Log.d(TAG, "destroy() called");
         unregister();
         if (destroyed) {
             return;
@@ -174,17 +175,19 @@ public final class USBMonitor {
      * @throws IllegalStateException
      */
     public synchronized void register() throws IllegalStateException {
+        if (DEBUG) Log.d(TAG, "register() called");
+        final Context context = mWeakContext.get();
+        if (context == null) {
+            Log.e(TAG, "register() called fail,context = null");
+            return;
+        }
         if (destroyed) throw new IllegalStateException("already destroyed");
         if (mPermissionIntent == null) {
-            if (DEBUG) Log.i(TAG, "register:");
-            final Context context = mWeakContext.get();
-            if (context != null) {
-                mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-                // ACTION_USB_DEVICE_ATTACHED never comes on some devices so it should not be added here
-                filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-                context.registerReceiver(mUsbReceiver, filter);
-            }
+            mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+            // ACTION_USB_DEVICE_ATTACHED never comes on some devices so it should not be added here
+            filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+            context.registerReceiver(mUsbReceiver, filter);
             // start connection check
             mDeviceCounts = 0;
             mAsyncHandler.postDelayed(mDeviceCheckRunnable, 1000);
@@ -197,6 +200,7 @@ public final class USBMonitor {
      * @throws IllegalStateException
      */
     public synchronized void unregister() throws IllegalStateException {
+        if (DEBUG) Log.d(TAG, "unregister() called");
         // 接続チェック用Runnableを削除
         mDeviceCounts = 0;
         if (!destroyed) {
@@ -500,6 +504,9 @@ public final class USBMonitor {
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
+            if (DEBUG)
+                Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
+
             if (destroyed) return;
             final String action = intent.getAction();
             if (ACTION_USB_PERMISSION.equals(action)) {
@@ -566,7 +573,6 @@ public final class USBMonitor {
                     final UsbDevice device = devices.get(i);
                     mAsyncHandler.post(() -> mOnDeviceConnectListener.onAttach(device));
                 }
-
             }
             mAsyncHandler.postDelayed(this, 2000);    // confirm every 2 seconds
         }
@@ -1149,6 +1155,10 @@ public final class USBMonitor {
             return USBMonitor.getDeviceKey(mWeakDevice.get());
         }
 
+        public UsbDeviceInfo getInfo() {
+            return mInfo;
+        }
+
         /**
          * get device key
          *
@@ -1366,7 +1376,7 @@ public final class USBMonitor {
          * This also close interfaces if they are opened in Java side
          */
         public synchronized void close() {
-            if (DEBUG) Log.i(TAG, "UsbControlBlock#close:");
+            if (DEBUG) Log.d(TAG, "close() called,UsbControlBlock#close");
 
             if (mConnection != null) {
                 final int n = mInterfaces.size();
