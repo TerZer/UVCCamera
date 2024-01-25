@@ -243,6 +243,11 @@ public class XUSBCameraView extends FrameLayout {
     }
 
     private void connect(USBMonitor.UsbControlBlock ctrlBlock, UVCCameraHandler handler, CameraViewInterface cameraViewInterface) {
+        if (!isAttachedToWindow()) {
+            Log.e(TAG, "connect() called with fail,is not attached to Window");
+            return;
+        }
+
         if (BuildConfig.DEBUG)
             Log.d(TAG, "connect() called with: ctrlBlock = [" + ctrlBlock.getInfo() + "], handler = [" + handler.getName() + "]");
         if (handler == null) {
@@ -255,6 +260,10 @@ public class XUSBCameraView extends FrameLayout {
         }
         handler.open(ctrlBlock);
         final SurfaceTexture st = cameraViewInterface.getSurfaceTexture();
+        if (st == null) {
+            Log.e(TAG, "connect() called with fail,getSurfaceTexture is null");
+            return;
+        }
         handler.startPreview(new Surface(st));
     }
 
