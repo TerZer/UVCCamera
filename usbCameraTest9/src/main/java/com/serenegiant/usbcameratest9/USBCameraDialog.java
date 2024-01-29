@@ -48,7 +48,6 @@ public class USBCameraDialog extends AppCompatDialog {
             @Override
             public void onClose() {
                 Log.d(TAG, "onClose() called");
-
             }
 
             @Override
