@@ -31,10 +31,11 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import com.serenegiant.Config;
 import com.serenegiant.usbcameracommon.BuildConfig;
 
 public abstract class MediaEncoder implements Runnable {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "MediaEncoder";
 
     protected static final int TIMEOUT_USEC = 10000;    // 10[msec]

@@ -40,6 +40,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.serenegiant.Config;
 import com.serenegiant.encoder.MediaAudioEncoder;
 import com.serenegiant.encoder.MediaEncoder;
 import com.serenegiant.encoder.MediaMuxerWrapper;
@@ -64,7 +65,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 abstract class AbstractUVCCameraHandler extends Handler {
-    public static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "AbsUVCCameraHandler";
 
     private static final int MSG_OPEN = 0;

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 
+import com.serenegiant.Config;
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
@@ -26,6 +27,8 @@ import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import java.nio.ByteBuffer;
 
 public class XUSBCameraView extends FrameLayout {
+
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "XUSBCameraView";
     private UVCCameraHandler uvcCameraHandler;
     private final UVCCameraTextureView mUVCCameraView;

@@ -37,8 +37,11 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.serenegiant.Config;
+import com.serenegiant.usbcameracommon.BuildConfig;
+
 public class MediaMuxerWrapper {
-	private static final boolean DEBUG = true;	// TODO set false on release
+	private static final boolean DEBUG = Config.DEBUG;
 	private static final String TAG = "MediaMuxerWrapper";
 
 	private static final String DIR_NAME = "USBCameraTest";

@@ -26,10 +26,13 @@ package com.serenegiant.usbcameracommon;
 import android.app.Activity;
 import android.util.Log;
 
+import com.serenegiant.Config;
 import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.widget.CameraViewInterface;
 
 public class UVCCameraHandler extends AbstractUVCCameraHandler {
+
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "UVCCameraHandler";
     private String name = UVCCameraHandler.class.getSimpleName();
 
@@ -65,7 +68,7 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @return
      */
     public static UVCCameraHandler createHandler(Activity parent, CameraViewInterface cameraView, int width, int height, float bandwidthFactor) {
-        if (BuildConfig.DEBUG)
+        if (DEBUG)
             Log.d(TAG, "createHandler() called with: parent = [" + parent + "], cameraView = [" + cameraView + "], width = [" + width + "], height = [" + height + "], bandwidthFactor = [" + bandwidthFactor + "]");
         return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, bandwidthFactor);
     }
@@ -96,7 +99,6 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @return
      */
     public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int encoderType, final int width, final int height, final int format) {
-
         return createHandler(parent, cameraView, encoderType, width, height, format, UVCCamera.DEFAULT_BANDWIDTH);
     }
 
@@ -113,7 +115,6 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
      * @return
      */
     public static UVCCameraHandler createHandler(final Activity parent, final CameraViewInterface cameraView, final int encoderType, final int width, final int height, final int format, final float bandwidthFactor) {
-
         final CameraThread thread = new CameraThread(UVCCameraHandler.class, parent, cameraView, encoderType, width, height, format, bandwidthFactor);
         thread.start();
         return (UVCCameraHandler) thread.getHandler();

@@ -33,6 +33,9 @@ import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import com.serenegiant.Config;
+import com.serenegiant.usbcameracommon.BuildConfig;
+
 /**
  * This class receives video images as ByteBuffer(strongly recommend direct ByteBuffer) as NV21(YUV420SP)
  * and encode them to h.264.
@@ -41,7 +44,7 @@ import android.util.Log;
  * from that you expected/can see on screen.
  */
 public class MediaVideoBufferEncoder extends MediaEncoder implements IVideoEncoder {
-	private static final boolean DEBUG = true;	// TODO set false on release
+	private static final boolean DEBUG = Config.DEBUG;
 	private static final String TAG = "MediaVideoBufferEncoder";
 
 	private static final String MIME_TYPE = "video/avc";

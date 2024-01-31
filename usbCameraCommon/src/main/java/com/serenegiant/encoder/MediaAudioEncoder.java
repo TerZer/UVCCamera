@@ -36,10 +36,11 @@ import android.media.MediaFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import com.serenegiant.Config;
 import com.serenegiant.usbcameracommon.BuildConfig;
 
 public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "MediaAudioEncoder";
 
     private static final String MIME_TYPE = "audio/mp4a-latm";

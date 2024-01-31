@@ -1017,7 +1017,7 @@ public final class USBMonitor {
         private final UsbDeviceInfo mInfo;
         private final int mBusNum;
         private final int mDevNum;
-        private final SparseArray<SparseArray<UsbInterface>> mInterfaces = new SparseArray<SparseArray<UsbInterface>>();
+        private final SparseArray<SparseArray<UsbInterface>> mInterfaces = new SparseArray<>();
 
         /**
          * this class needs permission to access USB device before constructing
@@ -1317,7 +1317,7 @@ public final class USBMonitor {
             checkConnection();
             SparseArray<UsbInterface> intfs = mInterfaces.get(interface_id);
             if (intfs == null) {
-                intfs = new SparseArray<UsbInterface>();
+                intfs = new SparseArray<>();
                 mInterfaces.put(interface_id, intfs);
             }
             UsbInterface intf = intfs.get(altsetting);
@@ -1380,6 +1380,7 @@ public final class USBMonitor {
 
             if (mConnection != null) {
                 final int n = mInterfaces.size();
+                List<SparseArray<UsbInterface>> usbInterfaceList = new ArrayList<>();
                 for (int i = 0; i < n; i++) {
                     final SparseArray<UsbInterface> intfs = mInterfaces.valueAt(i);
                     if (intfs != null) {
@@ -1388,9 +1389,14 @@ public final class USBMonitor {
                             final UsbInterface intf = intfs.valueAt(j);
                             mConnection.releaseInterface(intf);
                         }
-                        intfs.clear();
+                        usbInterfaceList.add(intfs);
                     }
                 }
+
+                for (SparseArray<UsbInterface> intfs : usbInterfaceList) {
+                    intfs.clear();
+                }
+
                 mInterfaces.clear();
                 mConnection.close();
                 mConnection = null;

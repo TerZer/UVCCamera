@@ -31,6 +31,7 @@ public class USBCameraDialog extends AppCompatDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_usb_camera);
         xusbCameraView = findViewById(R.id.xcv);
+        assert xusbCameraView != null;
         xusbCameraView.setPreviewSize(960,720);
         findViewById(R.id.btnCloseDialog).setOnClickListener(v -> dismiss());
     }

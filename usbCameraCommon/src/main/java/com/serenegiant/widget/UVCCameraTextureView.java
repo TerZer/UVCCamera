@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
+import com.serenegiant.Config;
 import com.serenegiant.encoder.IVideoEncoder;
 import com.serenegiant.encoder.MediaEncoder;
 import com.serenegiant.encoder.MediaVideoEncoder;
@@ -50,8 +51,7 @@ import com.serenegiant.utils.FpsCounter;
  * XXX it is better that can set the aspect ratio as xml property
  */
 public class UVCCameraTextureView extends AspectRatioTextureView implements TextureView.SurfaceTextureListener, CameraViewInterface {
-
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = Config.DEBUG;
     private static final String TAG = "UVCCameraTextureView";
     private String name = "";
     private SurfaceTexture texture;
@@ -279,7 +279,6 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
      * @author saki
      */
     private static final class RenderHandler extends Handler implements SurfaceTexture.OnFrameAvailableListener {
-
         private static final int MSG_REQUEST_RENDER = 1;
         private static final int MSG_SET_ENCODER = 2;
         private static final int MSG_CREATE_SURFACE = 3;
