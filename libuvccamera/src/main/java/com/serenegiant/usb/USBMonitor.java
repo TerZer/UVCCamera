@@ -43,6 +43,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -183,11 +184,16 @@ public final class USBMonitor {
         }
         if (destroyed) throw new IllegalStateException("already destroyed");
         if (mPermissionIntent == null) {
-            mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
             final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
             // ACTION_USB_DEVICE_ATTACHED never comes on some devices so it should not be added here
             filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-            context.registerReceiver(mUsbReceiver, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.registerReceiver(mUsbReceiver, filter, Context.RECEIVER_EXPORTED);
+            }
+            else {
+                context.registerReceiver(mUsbReceiver, filter);
+            }
             // start connection check
             mDeviceCounts = 0;
             mAsyncHandler.postDelayed(mDeviceCheckRunnable, 1000);
@@ -702,10 +708,10 @@ public final class USBMonitor {
         }
         if (useNewAPI && BuildCheck.isAndroid5()) {
             sb.append("#");
-            if (TextUtils.isEmpty(serial)) {
+            /*if (TextUtils.isEmpty(serial)) {
                 sb.append(device.getSerialNumber());
                 sb.append("#");    // API >= 21
-            }
+            }*/
             sb.append(device.getManufacturerName());
             sb.append("#");    // API >= 21
             sb.append(device.getConfigurationCount());
