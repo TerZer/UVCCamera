@@ -516,14 +516,45 @@ public class UVCCamera {
 //================================================================================
 
     /**
+     * @return min focus value
+     */
+    public synchronized int getFocusMin(){
+        return mFocusMin;
+    }
+
+    /**
+     * @return max focus value
+     */
+    public synchronized int getFocusMax(){
+        return mFocusMax;
+    }
+
+    /**
+     * Set focus value
+     * @param focus
+     */
+    public synchronized void setFocus(final int focus){
+        if (mNativePtr != 0)
+            nativeSetFocus(mNativePtr, focus);
+    }
+
+    /**
+     * @return focus
+     */
+    public synchronized int getFocus(){
+        if (mNativePtr != 0)
+            return nativeGetFocus(mNativePtr);
+        else
+            return -1;
+    }
+
+    /**
      * @param focus [%]
      */
-    public synchronized void setFocus(final int focus) {
-        if (mNativePtr != 0) {
-            final float range = Math.abs(mFocusMax - mFocusMin);
-            if (range > 0)
-                nativeSetFocus(mNativePtr, (int) (focus / 100.f * range) + mFocusMin);
-        }
+    public synchronized void setPercentageFocus(final int focus) {
+        final float range = Math.abs(mFocusMax - mFocusMin);
+        if (range > 0)
+            setFocus((int) (focus / 100.f * range) + mFocusMin);
     }
 
     /**
@@ -545,7 +576,7 @@ public class UVCCamera {
     /**
      * @return focus[%]
      */
-    public synchronized int getFocus() {
+    public synchronized int getPercentageFocus() {
         return getFocus(nativeGetFocus(mNativePtr));
     }
 
