@@ -442,6 +442,19 @@ uvc_error_t uvc_get_focus_abs(uvc_device_handle_t *devh, short *focus,
 	}
 }
 
+uvc_error_t uvc_set_stream_stop(uvc_device_handle_t *devh) {
+    uvc_error_t ret;
+    uint8_t data[0];
+    ret = libusb_control_transfer(devh->usb_devh, 0x2, UVC_SET_CUR,
+                                  0,
+                                  devh->info->stream_ifs->bEndpointAddress,
+                                  data, sizeof(data), CTRL_TIMEOUT_MILLIS);
+    if (LIKELY(ret == sizeof(data)))
+        return UVC_SUCCESS;
+    else
+        return ret;
+}
+
 uvc_error_t uvc_set_focus_abs(uvc_device_handle_t *devh, short focus) {
 	uint8_t data[2];
 	uvc_error_t ret;

@@ -287,6 +287,7 @@ int UVCCamera::stopPreview() {
 	ENTER();
 	if (LIKELY(mPreview)) {
 		mPreview->stopPreview();
+        uvc_set_stream_stop(mDeviceHandle);
 	}
 	RETURN(0, int);
 }

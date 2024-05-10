@@ -546,6 +546,7 @@ uvc_error_t uvc_get_device_with_fd(uvc_context_t *ctx, uvc_device_t **device,
 
 uvc_error_t uvc_open(uvc_device_t *dev, uvc_device_handle_t **devh);
 void uvc_close(uvc_device_handle_t *devh);
+uvc_error_t uvc_set_stream_stop(uvc_device_handle_t *devh);
 // XXX
 uvc_error_t uvc_set_reset_altsetting(uvc_device_handle_t *devh, uint8_t reset_on_release_if);
 
