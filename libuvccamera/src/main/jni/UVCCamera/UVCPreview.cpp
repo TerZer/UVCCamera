@@ -863,10 +863,10 @@ void UVCPreview::do_capture_callback(JNIEnv *env, uvc_frame_t *frame) {
 	ENTER();
 
 	if (LIKELY(frame)) {
-		uvc_frame_t *callback_frame = get_frame(frame->data_bytes);
+		uvc_frame_t *callback_frame = uvc_allocate_frame(frame->actual_bytes);
 		if (mFrameCallbackObj) {
-            memcpy(callback_frame->data, frame->data, frame->data_bytes);
-			jobject buf = env->NewDirectByteBuffer(callback_frame->data, frame->data_bytes);
+            memcpy(callback_frame->data, frame->data, frame->actual_bytes);
+			jobject buf = env->NewDirectByteBuffer(callback_frame->data, frame->actual_bytes);
 			env->CallVoidMethod(mFrameCallbackObj, iframecallback_fields.onFrame, buf);
 			env->ExceptionClear();
 			env->DeleteLocalRef(buf);
